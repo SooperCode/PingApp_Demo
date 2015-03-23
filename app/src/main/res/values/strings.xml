@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <!-- APP -->
+    <string name="app_name">PingApp</string>
+    <string name="offline_toast">you\'re offline</string>
+    <string name="doublehost_toast">host is already in the list!</string>
+    <string name="textfield_initialhost" translatable="false">www.google.com</string>
+
+    <!-- DISPLAY RESPONSE ACTIVITY  -->
+    <string name="async_progress">ping in progress...</string>
+    <string name="display_title">Server Response:</string>
+    <string name="display_code" translatable="false">Status Code 200:</string>
+    <string name="display_default">\"Woohoo, we\'re in business!!\"</string>
+
+    <!-- NOTIFICATION TEXT -->
+    <string name="notif_ticker">\u0020is available</string>
+    <string name="notif_contentTitle">\u0020is available!</string>
+    <string name="notif_contentText">\u0020has responded.</string>
+
+    <!-- MENU -->
+    <string name="menu_settings">Settings</string>
+    <string name="menu_clearList">Clear Watchlist</string>
+    <string name="menu_help">Help</string>
+
+    <!-- VIEWS -->
+    <string name="promptDisplay">Enter hostname or IP address:</string>
+    <string name="buttonAdd">ADD TO LIST</string>
+    <string name="buttonPingNow">PING NOW</string>
+    <string name="textfield_hint" translatable="false">www.google.com</string>
+    <string name="watchlist_title">WATCHLIST</string>
+    <string name="watchlight_content">Light to signal whether BackgroundPinging is active</string>
+
+    <!-- SETTINGS ACTIVITY -->
+    <string name="activity_settings_title">PingApp Settings</string>
+    <string name="pref_watchlist">Ping Watchlist</string>
+    <string name="pref_watchlist_summary">Motitor hosts &amp; get notified</string>
+    <string name="pref_interval">Set Ping Interval</string>
+    <string name="pref_interval_summary">Pinging your hosts every %s</string>
+    <string name="pref_nerdView">Set Nerd View</string>
+    <string name="pref_nerdView_summary">Watch your Hosts in Nerd View</string>
+    <string name="pref_notif">Sound/Vibrate</string>
+    <string name="pref_notif_summary">Set to your phone\'s default or mute</string>
+    <string name="pref_cat_watchlist">Watchlist Settings</string>
+    <string name="pref_cat_bgpinging">Manage Background Pinging</string>
+    <string name="pref_cat_notif">Notifications</string>
+
+    <!-- HELP ACTIVITY -->
+    <string name="activity_help_title">Help \t 1/3</string>
+    <string name="page0"><![CDATA[
+        <HTML><BODY><b><font color="#00ddff">PING NOW OR ADD TO WATCHLIST</font></b>
+        <p><font color="#00ddff">*</font> Ping your host now to receive the server\'s HTTP response,
+        or monitor its status by adding it to the watchlist.</p>
+        <p><font color="#00ddff">*</font> The watchlist is meant for monitoring the status of hosts
+        that are currently unavailable.</p> </BODY></HTML>]]></string>
+
+    <string name="page1"><![CDATA[
+        <HTML><BODY><b><font color="#00ddff">MONITOR YOUR HOSTS</font></b>
+        <p><font color="#00ddff">*</font> Get notified as soon as a server responds,
+        by turning on Background Pinging in Settings. PingApp will then check your hosts for
+        availability in regular intervals and send you a notification when a host has responded.</p>
+        <p><font color="#00ddff">*</font> Possible intervals range from 15 minutes to 24 hours.</p> </BODY><HTML>]]> </string>
+
+    <string name="page2"><![CDATA[
+        <HTML><BODY><b><font color="#00ddff">THE WATCHLIST</font></b>
+        <p><font color="#00ddff">*</font> The green light on top of the watchlist indicates that Background
+        Pinging is currently active.</p>
+        <p><font color="#00ddff">*</font> If you\'re feeling nerdy, go to Settings and switch to Nerd View...</p>
+        <p><font color="#00ddff">*</font> Tap on a host in the list to refresh it, or hold down to delete it.</p> </BODY></HTML>]]></string>
+
+
+    <!-- RESPONSE CODE INTERPRETATIONS: -->
+
+    <string name="rc_1xx">\"hold on...\"</string>
+    <string name="rc_1xx_2">\"just a matter of time...\"</string>
+    <string name="rc_1xx_3">\"be patient my friend...\"</string>
+    <string name="rc_1xx_4">\"thou shalt learn patience.\"</string>
+
+    <string name="rc_2xx">\"woohoo, it\'s your lucky day!\"</string>
+    <string name="rc_2xx_2">\"Success!!\"</string>
+    <string name="rc_2xx_3">\"YAY, available!\"</string>
+    <string name="rc_2xx_4">\"Hey, nice to see you!\"</string>
+    <string name="rc_2xx_5">\"We\'re in business!\"</string>
+
+    <string name="rc_3xx">\"had to redirect you.\"</string>
+    <string name="rc_3xx_2">\"Xtreme Redirecting...\"</string>
+    <string name="rc_3xx_3">\"nice URL but I\'ve seen better.\"</string>
+    <string name="rc_3xx_4">\"was this your first URL or what?!\"</string>
+
+    <string name="rc_4xx">\"you got it wrong, dude!\"</string>
+    <string name="rc_4xx_2">\"you ain\'t gettin in here.\"</string>
+    <string name="rc_4xx_3">Candy Shop\'s closed.</string>
+    <string name="rc_4xx_4">\"I don\'t wanna play with you.\"</string>
+    <string name="rc_4xx_5">\"You\'re not the boss of me.\"</string>
+    <string name="rc_4xx_6">\"I don\'t think so.\"</string>
+
+    <string name="rc_5xx">\"oops, my fault! Sorry.\"</string>
+    <string name="rc_5xx_2">\"It\'s not you. It\'s me.\"</string>
+    <string name="rc_5xx_3">\"maybe tomorrow.\"</string>
+    <string name="rc_5xx_4">\"nobody\'s perfect you know.\"</string>
+    <string name="rc_5xx_5">\"what do you WANT from me?!\"</string>
+
+    <string name="rc_nix">...(nobody home)...</string>
+    <string name="rc_nix_2">...nope...nothing.</string>
+    <string name="rc_nix_3">(what the hell did you enter..?!)</string>
+    <string name="rc_nix_4">...Zzzzzzzz....</string>
+    <string name="rc_nix_5">___silence___</string>
+
+</resources>

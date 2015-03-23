@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_watchlist">
+
+        <CheckBoxPreference
+            android:title="@string/pref_nerdView"
+            android:summary="@string/pref_nerdView_summary"
+            android:key="checkbox_nerdview"
+            android:defaultValue="false"  />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_bgpinging">
+
+       <SwitchPreference
+            android:title="@string/pref_watchlist"
+            android:summary="@string/pref_watchlist_summary"
+            android:key="switch_watchlist"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:persistent="true"
+            android:title="@string/pref_interval"
+            android:summary="@string/pref_interval_summary"
+            android:key="listprefs_intervals"
+            android:defaultValue="10800000"
+            android:entries="@array/intervals"
+            android:entryValues="@array/intervalValues"/>
+        <!-- persistent: whether the Preference stores its value to the shared preferences.  -->
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_notif">
+
+        <SwitchPreference
+            android:title="@string/pref_notif"
+            android:summary="@string/pref_notif_summary"
+            android:key="notification_sound"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+
+    <!-- FOR TESTING -->
+    <PreferenceCategory
+        android:title="FOR TESTING">
+
+        <SwitchPreference
+            android:title="Ping with Toast"
+            android:summary="get a toast when host responds"
+            android:key="toast_switch"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

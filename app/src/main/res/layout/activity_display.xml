@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="17dp"
+    android:paddingRight="17dp"
+    android:paddingBottom="25dp">
+
+    <TextView
+        android:id="@+id/display_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/display_code"
+        android:gravity="center"
+        android:textStyle="italic|bold"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <TextView
+        android:id="@+id/display_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(OK)"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/display_text"
+        android:paddingTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/display_default"
+        android:textSize="19sp"
+        android:textColor="#00ccff"
+        android:gravity="center"/>
+
+</LinearLayout>

@@ -1,0 +1,27 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@android:style/Theme.Holo" />
+
+    <!-- used in SettingsActivity -->
+    <style name="ListSeparator" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/category_color</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/list_section_divider_holo_dark</item>
+        <item name="android:paddingLeft">8dp</item>
+    </style>
+
+    <style name="PrefCatTheme" parent="AppTheme">
+        <item name="android:listSeparatorTextViewStyle">@style/ListSeparator</item>
+    </style>
+
+    <!-- holo blue bright for category titles -->
+    <color name="category_color">#00ddff</color>
+
+
+</resources>
