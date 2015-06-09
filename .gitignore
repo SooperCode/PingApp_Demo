@@ -1,6 +1,20 @@
+# Android Studio
+.idea
+*.iml
+.ipr
+.iws
+out/
+build/
+/captures
 .gradle
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+
+# Mac
 .DS_Store
-/build
+
+# Generic
+*~
+.swp
+
