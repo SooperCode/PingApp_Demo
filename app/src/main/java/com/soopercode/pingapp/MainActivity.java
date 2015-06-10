@@ -5,11 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +39,7 @@ import com.soopercode.pingapp.utils.URLValidator;
  * @author  Ria
  */
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /** name of the local file containing the hosts in the watchlist. */
     public static final String FILENAME = "pingapp";
@@ -67,18 +70,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        usersHost = (EditText) findViewById(R.id.usersHost);
-        prompt = (TextView) findViewById(R.id.promptDisplay);
+        //TODO: clean up...
+//        usersHost = (EditText) findViewById(R.id.usersHost);
+//        prompt = (TextView) findViewById(R.id.promptDisplay);
+//
+//        // set up buttons
+//        Button pingButton = (Button) findViewById(R.id.buttonPingNow);
+//        pingButton.setOnClickListener(this);
+//        Button addButton = (Button) findViewById(R.id.buttonAdd);
+//        addButton.setOnClickListener(this);
+//        ImageButton refreshButton = (ImageButton) findViewById(R.id.buttonRefresh);
+//        refreshButton.setOnClickListener(this);
+//        ImageButton eraseButton = (ImageButton) findViewById(R.id.buttonErase);
+//        eraseButton.setOnClickListener(this);
 
-        // set up buttons
-        Button pingButton = (Button) findViewById(R.id.buttonPingNow);
-        pingButton.setOnClickListener(this);
-        Button addButton = (Button) findViewById(R.id.buttonAdd);
-        addButton.setOnClickListener(this);
-        ImageButton refreshButton = (ImageButton) findViewById(R.id.buttonRefresh);
-        refreshButton.setOnClickListener(this);
-        ImageButton eraseButton = (ImageButton) findViewById(R.id.buttonErase);
-        eraseButton.setOnClickListener(this);
+        setSupportActionBar(initToolbar());
 
         // set up list
         ListView pingListView = (ListView) findViewById(R.id.listview_pingList);
@@ -95,6 +101,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean("firstRun", false).apply();
         }
+    }
+
+    private Toolbar initToolbar(){
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.showOverflowMenu();
+        return toolbar;
     }
 
     /**
@@ -122,12 +134,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         // set up watchlist light
-        onOfLight = (ImageView) findViewById(R.id.imgWatchlistOn);
-        if(PrefsManager.isBgPingingActive(this)){
-            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.on_30x30));
-        }else{
-            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.off_30x30));
-        }
+//        onOfLight = (ImageView) findViewById(R.id.imgWatchlistOn);
+//        if(PrefsManager.isBgPingingActive(this)){
+//            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.on_30x30));
+//        }else{
+//            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.off_30x30));
+//        }
     }
 
     /**
@@ -138,49 +150,49 @@ public class MainActivity extends Activity implements View.OnClickListener {
      */
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.buttonErase:
-                usersHost.setText("");
-                if(dummyCounter==0){
-                    prompt.setText(R.string.promptDisplay);
-                    prompt.setTextAppearance(this, R.style.defaultStyle);
-                }
-                break;
-
-            case R.id.buttonPingNow:
-                if(validateHostname(usersHost.getText().toString())){
-                    // if we have a valid hostname: ping it
-                    ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-                    if(netInfo !=null && netInfo.isConnected()){
-                        QuickPing quickPing = new QuickPing();
-                        quickPing.execute(validatedHost);
-                    }else{
-                        Toast.makeText(this, getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-
-            case R.id.buttonAdd:
-                String hostname = usersHost.getText().toString();
-                // validate hostname before we do anything:
-                if(validateHostname(hostname)) {
-                    pingListManager.addNewHost(validatedHost);
-                    usersHost.setText("");
-                    prompt.setText(R.string.promptDisplay);
-                    prompt.setTextAppearance(this, R.style.defaultStyle);
-                    //hide the keyboard:
-                    InputMethodManager inputMan = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-                    inputMan.hideSoftInputFromWindow(usersHost.getWindowToken(), 0);
-                }else{
-                    Log.d(TAG, "MA: validation returned false");
-                }
-                break;
-
-            case R.id.buttonRefresh:
-                pingListManager.pingListNow();
-                break;
-        }
+//        switch(view.getId()){
+//            case R.id.buttonErase:
+//                usersHost.setText("");
+//                if(dummyCounter==0){
+//                    prompt.setText(R.string.promptDisplay);
+//                    prompt.setTextAppearance(this, R.style.defaultStyle);
+//                }
+//                break;
+//
+//            case R.id.buttonPingNow:
+//                if(validateHostname(usersHost.getText().toString())){
+//                    // if we have a valid hostname: ping it
+//                    ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+//                    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+//                    if(netInfo !=null && netInfo.isConnected()){
+//                        QuickPing quickPing = new QuickPing();
+//                        quickPing.execute(validatedHost);
+//                    }else{
+//                        Toast.makeText(this, getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                break;
+//
+//            case R.id.buttonAdd:
+//                String hostname = usersHost.getText().toString();
+//                // validate hostname before we do anything:
+//                if(validateHostname(hostname)) {
+//                    pingListManager.addNewHost(validatedHost);
+//                    usersHost.setText("");
+//                    prompt.setText(R.string.promptDisplay);
+//                    prompt.setTextAppearance(this, R.style.defaultStyle);
+//                    //hide the keyboard:
+//                    InputMethodManager inputMan = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+//                    inputMan.hideSoftInputFromWindow(usersHost.getWindowToken(), 0);
+//                }else{
+//                    Log.d(TAG, "MA: validation returned false");
+//                }
+//                break;
+//
+//            case R.id.buttonRefresh:
+//                pingListManager.pingListNow();
+//                break;
+//        }
     }
 
     /**

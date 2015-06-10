@@ -57,7 +57,7 @@ public class PingListManager implements OnItemClickListener,
      * @param pingListView  A reference to the ListView containing the watchlist
      */
     public PingListManager(Activity context, ListView pingListView){
-        this.context = context;
+        this.context = context; //TODO: refactor this code - it hurts people.
         this.pingListView = pingListView;
     }
 
@@ -138,28 +138,51 @@ public class PingListManager implements OnItemClickListener,
      * and calls {@code addHostToList} for each host.
      */
     public void loadList(){
-        InputStream in = null;
-        try{
-            in = context.openFileInput(MainActivity.FILENAME);
-            if(in !=null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                String hostname;
-                while ((hostname = reader.readLine()) != null) {
-                    addHostToList(hostname);
-                }
-                pingListAdapter.notifyDataSetChanged();
-            }
-        }catch(IOException ioe){
-            Log.e(MainActivity.TAG, "PLM: loading list from file failed " + ioe.toString());
-        }finally{
-            //if file was empty or not found, set list status empty:
-            if(pingList.isEmpty()){
-                PrefsManager.setPingListEmpty(context, true);
-            }
-            if(in != null){
-                try { in.close(); } catch (IOException ioe) { ioe.printStackTrace(); }
-            }
+        // FOR TESTING - TO FILL UP LIST.
+        String[] hosts = {
+                "www.google.de",
+                "www.google.nl",
+                "www.google.dk",
+                "www.google.com",
+                "www.google.at",
+                "www.yahoo.dk",
+                "www.yahoo.com",
+                "www.yahoo.nl",
+                "www.test.com",
+                "www.lalala.de",
+                "www.hostwithnoname.com",
+                "google.com",
+                "google.de",
+                "google.nl",
+                "google.dk"
+        };
+        for(String host : hosts){
+            addHostToList(host);
         }
+        pingListAdapter.notifyDataSetChanged();
+
+//        InputStream in = null;
+//        try{
+//            in = context.openFileInput(MainActivity.FILENAME);
+//            if(in !=null) {
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//                String hostname;
+//                while ((hostname = reader.readLine()) != null) {
+//                    addHostToList(hostname);
+//                }
+//                pingListAdapter.notifyDataSetChanged();
+//            }
+//        }catch(IOException ioe){
+//            Log.e(MainActivity.TAG, "PLM: loading list from file failed " + ioe.toString());
+//        }finally{
+//            //if file was empty or not found, set list status empty:
+//            if(pingList.isEmpty()){
+//                PrefsManager.setPingListEmpty(context, true);
+//            }
+//            if(in != null){
+//                try { in.close(); } catch (IOException ioe) { ioe.printStackTrace(); }
+//            }
+//        }
     }
 
     /**
@@ -198,9 +221,9 @@ public class PingListManager implements OnItemClickListener,
         intent.putExtra("switchOn", 2); //2 = turn it off
         context.sendBroadcast(intent);
         //turn off light
-        ImageView light = (ImageView)context.findViewById(R.id.imgWatchlistOn);
-        light.setImageDrawable(context.getResources().getDrawable(R.drawable.off_30x30));
-        pingListAdapter.notifyDataSetChanged();
+//        ImageView light = (ImageView)context.findViewById(R.id.imgWatchlistOn);
+//        light.setImageDrawable(context.getResources().getDrawable(R.drawable.off_30x30));
+//        pingListAdapter.notifyDataSetChanged();
         //delete file
         context.deleteFile(MainActivity.FILENAME);
     }

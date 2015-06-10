@@ -39,6 +39,7 @@ public class SettingsActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        //TODO: need Toolbar for Settings.
         ActionBar actionBar = getActionBar();
         if(actionBar !=null){
             actionBar.setDisplayHomeAsUpEnabled(true); //allows Up-navigation

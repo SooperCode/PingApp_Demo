@@ -48,8 +48,8 @@ public class AsyncListPing extends AsyncTask<PingItem, Void, Boolean> {
      */
     @Override
     protected void onPreExecute() {
-        progressWheel = (ProgressBar)context.findViewById(R.id.progressWheel);
-        progressWheel.setVisibility(View.VISIBLE);
+//        progressWheel = (ProgressBar)context.findViewById(R.id.progressWheel);
+//        progressWheel.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -90,6 +90,6 @@ public class AsyncListPing extends AsyncTask<PingItem, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean okay) {
         completer.onAsyncPingCompleted(okay);
-        progressWheel.setVisibility(View.INVISIBLE);
+//        progressWheel.setVisibility(View.INVISIBLE);
     }
 }

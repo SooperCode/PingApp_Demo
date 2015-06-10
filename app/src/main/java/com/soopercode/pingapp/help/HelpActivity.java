@@ -78,11 +78,12 @@ public class HelpActivity extends FragmentActivity {
             @Override public void onPageScrollStateChanged(int state) { }
         });
 
+        // TODO: need Toolbar for HelpActivity
         // allow for Up-navigation on the action bar
-        ActionBar actionBar = getActionBar();
-        if(actionBar !=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        ActionBar actionBar = getActionBar();
+//        if(actionBar !=null){
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
     }
 
     /**
