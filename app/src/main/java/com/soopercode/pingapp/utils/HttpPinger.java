@@ -33,9 +33,14 @@ public class HttpPinger {
 
         /* TODO ******** FOR DEMO ********* */
         if(hostname.equals("www.unavailable.com") ||
-                hostname.equals("www.serverdown.nl")){
+                hostname.equals("thepiratebay.org")){
             return response;
-        } /* ****************************** */
+        } else if(hostname.equals("www.somewebsite.com")){
+            return 503;
+        } else if(hostname.equals("www.serverdown.nl")){
+            return 401;
+        }
+        /* ****************************** */
 
         try {
             url = new URL("http", hostname, "/");
@@ -70,7 +75,12 @@ public class HttpPinger {
         HttpURLConnection urlc;
 
         /* TODO ******** FOR DEMO ********* */
-        if(hostname.equals("www.unavailable.com") ||
+        if(hostname.equals("www.somewebsite.com")){
+            Bundle responseBundle = new Bundle();
+            responseBundle.putInt("responseCode", 401);
+            responseBundle.putString("responseMsg", "Unauthorized");
+            return responseBundle;
+        }else if(hostname.equals("www.unavailable.com") ||
                 hostname.equals("www.serverdown.nl")){
             Bundle responseBundle = new Bundle();
             responseBundle.putInt("responseCode", responseCode);

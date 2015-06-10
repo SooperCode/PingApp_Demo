@@ -23,6 +23,9 @@ public class IPGenerator {
      *                  or the String "unknown host" if no IP has been obtained
      */
     public static String getIP(String hostname){
+        if(hostname.equals("www.somewebsite.com")){
+            return "88.102.237.130";
+        }
         InetAddress host;
         try{
             host = InetAddress.getByName(hostname);

@@ -27,7 +27,10 @@ public class SocketPinger {
         Socket socket = new Socket();
         /* TODO ******** FOR DEMO ********* */
         if(hostname.equals("www.unavailable.com") ||
-                hostname.equals("www.serverdown.nl")){
+                hostname.equals("www.serverdown.nl") ||
+                hostname.equals("thepiratebay.org") ||
+                hostname.equals("www.somewebsite.com") ||
+                hostname.equals("www.examplehost.org")){
             return false;
         } /* ****************************** */
         try{
