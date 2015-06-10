@@ -44,7 +44,9 @@ public class HttpPinger {
         /* ****************************** */
 
         try {
-            url = new URL("http", hostname, "/");
+            String idn = IDN.toASCII(hostname);
+            url = new URL("http", idn, "/");
+
             urlc = (HttpURLConnection) url.openConnection();
             urlc.setConnectTimeout(7000);
             response = urlc.getResponseCode();
@@ -90,10 +92,7 @@ public class HttpPinger {
         } /* ****************************** */
 
         try {
-            url = new URL("http", hostname, "/");
-            String host = url.getHost();
-            String idn = IDN.toASCII(host);
-
+            String idn = IDN.toASCII(hostname);
             url = new URL("http", idn, "/");
 
             urlc = (HttpURLConnection) url.openConnection();

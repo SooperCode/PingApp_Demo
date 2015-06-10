@@ -5,6 +5,7 @@ import android.util.Log;
 import com.soopercode.pingapp.MainActivity;
 
 import java.io.IOException;
+import java.net.IDN;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -34,7 +35,7 @@ public class SocketPinger {
             return false;
         } /* ****************************** */
         try{
-            socket.connect(new InetSocketAddress(hostname, 80), 7000); //port 80, 7sec timeout.
+            socket.connect(new InetSocketAddress(IDN.toASCII(hostname), 80), 7000); //port 80, 7sec timeout.
             return true;
         }catch (IOException ioe){
             Log.e(MainActivity.TAG, "Socket ex: " + ioe.toString());
