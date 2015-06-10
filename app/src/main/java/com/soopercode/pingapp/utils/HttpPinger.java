@@ -7,6 +7,7 @@ import com.soopercode.pingapp.MainActivity;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.IDN;
 import java.net.URL;
 
 /**
@@ -90,6 +91,11 @@ public class HttpPinger {
 
         try {
             url = new URL("http", hostname, "/");
+            String host = url.getHost();
+            String idn = IDN.toASCII(host);
+
+            url = new URL("http", idn, "/");
+
             urlc = (HttpURLConnection) url.openConnection();
             urlc.setConnectTimeout(7000);
             responseCode = urlc.getResponseCode();
