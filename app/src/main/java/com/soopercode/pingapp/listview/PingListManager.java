@@ -7,13 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,10 +24,7 @@ import com.soopercode.pingapp.PrefsManager;
 import com.soopercode.pingapp.R;
 import com.soopercode.pingapp.background.BackgroundPingManager;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +44,27 @@ public class PingListManager implements OnItemClickListener,
     private Activity context;
     private ArrayAdapter pingListAdapter;
     private List<PingItem> pingList = new ArrayList<>();
-    private ListView pingListView;
+    private RecyclerView pingListRecycler;
     private boolean nerdViewOn;
+
+    // FOR TESTING:
+    private String[] dummyHosts = {
+            "www.google.de",
+            "www.google.nl",
+            "www.google.dk",
+            "www.google.com",
+            "www.google.at",
+            "www.yahoo.dk",
+            "www.yahoo.com",
+            "www.yahoo.nl",
+            "www.test.com",
+            "www.lalala.de",
+            "www.hostwithnoname.com",
+            "google.com",
+            "google.de",
+            "google.nl",
+            "google.dk"
+    };
 
     /**
      * Creates a new PingListManager with reference to MainActivity
@@ -56,9 +73,9 @@ public class PingListManager implements OnItemClickListener,
      * @param context       MainActivity's Context
      * @param pingListView  A reference to the ListView containing the watchlist
      */
-    public PingListManager(Activity context, ListView pingListView){
+    public PingListManager(Activity context, RecyclerView pingListView){
         this.context = context; //TODO: refactor this code - it hurts people.
-        this.pingListView = pingListView;
+        this.pingListRecycler = pingListView;
     }
 
     /**
@@ -75,9 +92,12 @@ public class PingListManager implements OnItemClickListener,
             pingListAdapter = new PingListNerdAdapter(context, pingList);
             this.nerdViewOn = true;
         }
-        pingListView.setAdapter(pingListAdapter);
-        pingListView.setOnItemClickListener(this);
-        pingListView.setOnItemLongClickListener(this);
+//        pingListView.setAdapter(pingListAdapter);
+//        pingListView.setOnItemClickListener(this);
+//        pingListView.setOnItemLongClickListener(this);
+        pingListRecycler.setHasFixedSize(true);
+        pingListRecycler.setLayoutManager(new LinearLayoutManager(context));
+        pingListRecycler.setAdapter(new RecyclerAdapter(dummyHosts));
     }
 
     /**
@@ -139,24 +159,7 @@ public class PingListManager implements OnItemClickListener,
      */
     public void loadList(){
         // FOR TESTING - TO FILL UP LIST.
-        String[] hosts = {
-                "www.google.de",
-                "www.google.nl",
-                "www.google.dk",
-                "www.google.com",
-                "www.google.at",
-                "www.yahoo.dk",
-                "www.yahoo.com",
-                "www.yahoo.nl",
-                "www.test.com",
-                "www.lalala.de",
-                "www.hostwithnoname.com",
-                "google.com",
-                "google.de",
-                "google.nl",
-                "google.dk"
-        };
-        for(String host : hosts){
+        for(String host : dummyHosts){
             addHostToList(host);
         }
         pingListAdapter.notifyDataSetChanged();

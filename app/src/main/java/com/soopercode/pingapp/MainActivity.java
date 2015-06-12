@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(initToolbar());
 
         // set up list
-        ListView pingListView = (ListView) findViewById(R.id.listview_pingList);
+        RecyclerView pingListView = (RecyclerView) findViewById(R.id.recyclerview_pinglist);
         pingListManager = new PingListManager(this, pingListView);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean nerdPref = sharedPrefs.getBoolean("checkbox_nerdview", false);

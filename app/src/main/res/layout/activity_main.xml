@@ -52,11 +52,16 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <ListView
-        android:id="@+id/listview_pingList"
+    <!--<ListView-->
+        <!--android:id="@+id/listview_pingList"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_pinglist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
