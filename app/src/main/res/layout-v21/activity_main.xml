@@ -10,8 +10,14 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="142dp"
-        android:fitsSystemWindows="true">
+        android:layout_height="192dp"
+        android:paddingTop="50dp" >
+        <!-- removed android:fitsSystemWindows="true"
+            & added padding because menu button wasn't showing.
+        this issue is known bug:
+        Issue 175069:	CoordinatorLayout fitsSystemWindows behavior on API 21
+        https://code.google.com/p/android/issues/detail?id=175069
+        -->
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
