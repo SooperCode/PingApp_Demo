@@ -42,28 +42,28 @@ public class PingListManager implements OnItemClickListener,
     private static final int MODE_NERD = 2;
 
     private Activity context;
-    private ArrayAdapter pingListAdapter;
+    private RecyclerAdapter recyclerAdapter;
     private List<PingItem> pingList = new ArrayList<>();
     private RecyclerView pingListRecycler;
     private boolean nerdViewOn;
 
     // FOR TESTING:
-    private String[] dummyHosts = {
+    private static final String[] dummyHosts = {
             "www.google.de",
             "www.google.nl",
             "www.google.dk",
-//            "www.google.com",
-//            "www.google.at",
-//            "www.yahoo.dk",
-//            "www.yahoo.com",
-//            "www.yahoo.nl",
-//            "www.test.com",
-//            "www.lalala.de",
-//            "www.hostwithnoname.com",
-//            "google.com",
-//            "google.de",
-//            "google.nl",
-//            "google.dk"
+            "www.google.com",
+            "www.google.at",
+            "www.yahoo.dk",
+            "www.yahoo.com",
+            "www.yahoo.nl",
+            "www.test.com",
+            "www.lalala.de",
+            "www.hostwithnoname.com",
+            "google.com",
+            "google.de",
+            "google.nl",
+            "google.dk"
     };
 
     /**
@@ -86,18 +86,14 @@ public class PingListManager implements OnItemClickListener,
     public void createListView(boolean nerdViewOn){
 
         if(!nerdViewOn) {
-            pingListAdapter = new PingListAdapter(context, pingList);
             this.nerdViewOn = false;
         }else{
-            pingListAdapter = new PingListNerdAdapter(context, pingList);
             this.nerdViewOn = true;
         }
-//        pingListView.setAdapter(pingListAdapter);
-//        pingListView.setOnItemClickListener(this);
-//        pingListView.setOnItemLongClickListener(this);
+        recyclerAdapter = new RecyclerAdapter(context, pingList, nerdViewOn);
         pingListRecycler.setHasFixedSize(true);
         pingListRecycler.setLayoutManager(new LinearLayoutManager(context));
-        pingListRecycler.setAdapter(new RecyclerAdapter(dummyHosts));
+        pingListRecycler.setAdapter(recyclerAdapter);
     }
 
     /**
@@ -137,7 +133,7 @@ public class PingListManager implements OnItemClickListener,
                         if(pingList.isEmpty()){
                             clearList();
                         }else{
-                            pingListAdapter.notifyDataSetChanged();
+                            recyclerAdapter.notifyDataSetChanged();
                             saveList();
                         }
                     }
@@ -162,7 +158,7 @@ public class PingListManager implements OnItemClickListener,
         for(String host : dummyHosts){
             addHostToList(host);
         }
-        pingListAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
 
 //        InputStream in = null;
 //        try{
@@ -261,7 +257,7 @@ public class PingListManager implements OnItemClickListener,
         // make new Ping-Item, add to list, save list to file, ping host
         PingItem host = new PingItem(validatedHostname);
         pingList.add(host);
-        pingListAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
         saveList();
         pingHostFromList(host);
     }
@@ -312,7 +308,7 @@ public class PingListManager implements OnItemClickListener,
     @Override
     public void onAsyncPingCompleted(boolean okay) {
         if(okay){
-            pingListAdapter.notifyDataSetChanged();
+            recyclerAdapter.notifyDataSetChanged();
         }
 
     }
