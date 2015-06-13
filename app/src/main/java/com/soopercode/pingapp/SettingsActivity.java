@@ -26,6 +26,8 @@ import com.soopercode.pingapp.help.HelpActivity;
 
 public class SettingsActivity extends Activity{
 
+    private static final String TAG = SettingsActivity.class.getSimpleName();
+
     /**
      * Initializes this Activity.
      *
@@ -118,11 +120,11 @@ public class SettingsActivity extends Activity{
             if(PrefsManager.isPingListEmpty(context)){
                 switchPref.setChecked(false);
                 switchPref.setEnabled(false);
-                Log.d(MainActivity.TAG, "SA: set switch disabled.");
+                Log.d(TAG, "SA: set switch disabled.");
             }else{
                 boolean bgPingingIsOn = PrefsManager.isBgPingingActive(context);
                 switchPref.setChecked(bgPingingIsOn);
-                Log.d(MainActivity.TAG, "SA: bgpinging_active is: " + (bgPingingIsOn? "on" : "off"));
+                Log.d(TAG, "SA: bgpinging_active is: " + (bgPingingIsOn? "on" : "off"));
                 switchPref.setOnPreferenceChangeListener(this);
             }
             findPreference("listprefs_intervals").setOnPreferenceChangeListener(this);
@@ -138,7 +140,7 @@ public class SettingsActivity extends Activity{
          */
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            Log.d(MainActivity.TAG, "SA-PrefsFragment: onPreferenceChange");
+            Log.d(TAG, "SA-PrefsFragment: onPreferenceChange");
             // prepare message for BGPManager
             Activity currentActivity = getActivity();
             Intent intent = new Intent(currentActivity.getBaseContext(), BackgroundPingManager.class);

@@ -2,8 +2,6 @@ package com.soopercode.pingapp.utils;
 
 import android.util.Log;
 
-import com.soopercode.pingapp.MainActivity;
-
 import java.io.IOException;
 import java.net.IDN;
 import java.net.InetSocketAddress;
@@ -16,6 +14,8 @@ import java.net.Socket;
  * @author  Ria
  */
 public class SocketPinger {
+
+    private static final String TAG = SocketPinger.class.getSimpleName();
 
     /**
      * Attempts to make a {@link java.net.Socket} connection
@@ -38,7 +38,7 @@ public class SocketPinger {
             socket.connect(new InetSocketAddress(IDN.toASCII(hostname), 80), 7000); //port 80, 7sec timeout.
             return true;
         }catch (IOException ioe){
-            Log.e(MainActivity.TAG, "Socket ex: " + ioe.toString());
+            Log.e(TAG, "Socket ex: " + ioe.toString());
             return false;
         }finally{
             if(socket.isConnected()){

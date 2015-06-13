@@ -3,8 +3,6 @@ package com.soopercode.pingapp.utils;
 import android.util.Log;
 import android.util.Patterns;
 
-import com.soopercode.pingapp.MainActivity;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -13,7 +11,9 @@ import java.net.URL;
  *
  * @author Ria
  */
-public class URLValidator {
+public class UrlValidator {
+
+    private static final String TAG = UrlValidator.class.getSimpleName();
 
     /**
      * Verifies whether the user's input constitutes a valid URL using a
@@ -29,7 +29,7 @@ public class URLValidator {
 
         // check for invalid characters:
         if(! Patterns.WEB_URL.matcher(usersHost).matches()){
-            Log.d(MainActivity.TAG, "URLValidator: URL check returns false");
+            Log.d(TAG, "URL check returns false");
             throw new StupidUserException(usersHost);
         }
 

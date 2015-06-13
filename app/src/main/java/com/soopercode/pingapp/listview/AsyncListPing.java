@@ -1,12 +1,9 @@
 package com.soopercode.pingapp.listview;
 
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.view.View;
 import android.widget.ProgressBar;
 
 import com.soopercode.pingapp.OnAsyncCompleted;
-import com.soopercode.pingapp.R;
 import com.soopercode.pingapp.utils.HttpPinger;
 import com.soopercode.pingapp.utils.IPGenerator;
 import com.soopercode.pingapp.utils.SocketPinger;
@@ -20,7 +17,6 @@ import com.soopercode.pingapp.utils.SocketPinger;
  */
 public class AsyncListPing extends AsyncTask<PingItem, Void, Boolean> {
 
-    private Activity context;
     private OnAsyncCompleted completer;
     private int taskId;
     private ProgressBar progressWheel;
@@ -32,12 +28,10 @@ public class AsyncListPing extends AsyncTask<PingItem, Void, Boolean> {
      * {@link PingListManager}, who instantiates and starts this AsyncTask,
      * according to whether the watchlist is currently set to Nerd View or not.
      *
-     * @param context       The current Context: MainActivity's Context in this case
      * @param completer     Reference to the object to be notified after the task is done
      * @param taskId        ID number indicating the specific kind of task to be performed
      */
-    public AsyncListPing(Activity context, OnAsyncCompleted completer, int taskId){
-        this.context = context;
+    public AsyncListPing(OnAsyncCompleted completer, int taskId){
         this.completer = completer;
         this.taskId = taskId;
     }

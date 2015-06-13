@@ -3,8 +3,6 @@ package com.soopercode.pingapp.utils;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.soopercode.pingapp.MainActivity;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.IDN;
@@ -17,6 +15,8 @@ import java.net.URL;
  * @author  Ria
  */
 public class HttpPinger {
+
+    private static final String TAG = HttpPinger.class.getSimpleName();
 
     /**
      * Attempts to obtain a Http Response Code from the specified host
@@ -51,12 +51,12 @@ public class HttpPinger {
             urlc.setConnectTimeout(7000);
             response = urlc.getResponseCode();
         }catch(NullPointerException npe){
-            Log.d(MainActivity.TAG, "HttpPinger: NPE: " + npe.toString());
+            Log.d(TAG, "HttpPinger: NPE: " + npe.toString());
             /* ANDROID-BUG:
             java.lang.NullPointerException
             at libcore.net.http.HttpConnection$Address.hashCode(HttpConnection.java:343)  */
         }catch(IOException ioe) {
-            Log.d(MainActivity.TAG, "HttpPinger: IOE:", ioe);
+            Log.d(TAG, "HttpPinger: IOE:", ioe);
         }
 
         return response;
@@ -100,12 +100,12 @@ public class HttpPinger {
             responseCode = urlc.getResponseCode();
             responseMsg = urlc.getResponseMessage();
         }catch(NullPointerException npe){
-            Log.d(MainActivity.TAG, "HttpPinger: NPE: " + npe.toString());
+            Log.d(TAG, "HttpPinger: NPE: " + npe.toString());
             /* ANDROID-BUG:
             java.lang.NullPointerException
             at libcore.net.http.HttpConnection$Address.hashCode(HttpConnection.java:343)  */
         }catch(IOException ioe) {
-            Log.d(MainActivity.TAG, "HttpPinger: IOE:", ioe);
+            Log.d(TAG, "HttpPinger: IOE:", ioe);
         }
         Bundle responseBundle = new Bundle();
         responseBundle.putInt("responseCode", responseCode);

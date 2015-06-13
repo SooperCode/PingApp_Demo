@@ -2,8 +2,6 @@ package com.soopercode.pingapp.utils;
 
 import android.util.Log;
 
-import com.soopercode.pingapp.MainActivity;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -13,6 +11,8 @@ import java.net.UnknownHostException;
  * @author  Ria
  */
 public class IPGenerator {
+
+    private static final String TAG = IPGenerator.class.getSimpleName();
 
     /**
      * Attempts to retrieve the IP-address of the specified host
@@ -31,7 +31,7 @@ public class IPGenerator {
             host = InetAddress.getByName(hostname);
             return host.getHostAddress();
         }catch(UnknownHostException uhe){
-            Log.d(MainActivity.TAG, "IPGenerator: " + uhe.toString());
+            Log.d(TAG, "IPGenerator: " + uhe.toString());
             return "unknown host";
         }
     }

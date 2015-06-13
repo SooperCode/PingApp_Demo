@@ -1,13 +1,8 @@
 package com.soopercode.pingapp;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,20 +13,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.soopercode.pingapp.help.HelpActivity;
 import com.soopercode.pingapp.listview.PingListManager;
 import com.soopercode.pingapp.utils.HttpPinger;
 import com.soopercode.pingapp.utils.StupidUserException;
-import com.soopercode.pingapp.utils.URLValidator;
+import com.soopercode.pingapp.utils.UrlValidator;
 
 /**
  * Represents the Main Screen of this Application.
@@ -46,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String FILENAME = "pingapp";
 
     /** Log tag for testing & debugging */
-    public static final String TAG = "debugging";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int CHANGE_SETTINGS_REQUEST = 1;
     private static int dummyCounter = 0;
@@ -205,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private boolean validateHostname(String hostname){
         try{
-            validatedHost = URLValidator.validateHostname(hostname);
+            validatedHost = UrlValidator.validateHostname(hostname);
             usersHost.setText(validatedHost);
             //check the dummy-state:
             if(dummyCounter !=0){

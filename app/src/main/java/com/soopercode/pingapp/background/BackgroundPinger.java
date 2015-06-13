@@ -40,6 +40,8 @@ import java.util.Map;
  */
 public class BackgroundPinger extends Service {
 
+    private static final String TAG = BackgroundPinger.class.getSimpleName();
+
     /* Handlers */
     private Handler notificationHandler;
     private Handler doneHandler;
@@ -104,7 +106,7 @@ public class BackgroundPinger extends Service {
                     }
                 }
             } catch (IOException ioe) {
-                Log.e(MainActivity.TAG, "BP: loading list from file failed", ioe);
+                Log.e(TAG, "BP: loading list from file failed", ioe);
             } finally {
                 if (in != null) {
                     try { in.close(); } catch (IOException ioe) { ioe.printStackTrace(); }

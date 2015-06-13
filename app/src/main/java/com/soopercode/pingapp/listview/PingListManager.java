@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -37,6 +36,8 @@ import java.util.List;
  */
 public class PingListManager implements OnItemClickListener,
                                             OnItemLongClickListener, OnAsyncCompleted {
+
+    private static final String TAG = PingListManager.class.getSimpleName();
 
     private static final int MODE_NORMAL = 1;
     private static final int MODE_NERD = 2;
@@ -172,7 +173,7 @@ public class PingListManager implements OnItemClickListener,
 //                pingListAdapter.notifyDataSetChanged();
 //            }
 //        }catch(IOException ioe){
-//            Log.e(MainActivity.TAG, "PLM: loading list from file failed " + ioe.toString());
+//            Log.e(TAG, "PLM: loading list from file failed " + ioe.toString());
 //        }finally{
 //            //if file was empty or not found, set list status empty:
 //            if(pingList.isEmpty()){
@@ -196,7 +197,7 @@ public class PingListManager implements OnItemClickListener,
                 out.write(pingList.get(i).getHostname() + "\n");
             }
         }catch(IOException ioe){
-            Log.e(MainActivity.TAG, "PLM: writing to file failed", ioe);
+            Log.e(TAG, "PLM: writing to file failed", ioe);
         }finally{
             if(out !=null){
                 try{ out.close(); }catch(IOException ioe){ ioe.printStackTrace(); }
@@ -273,7 +274,7 @@ public class PingListManager implements OnItemClickListener,
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         if(netInfo !=null && netInfo.isConnected()){
-            AsyncListPing asyncPinger = new AsyncListPing(context, this,
+            AsyncListPing asyncPinger = new AsyncListPing(this,
                                     (nerdViewOn)? MODE_NERD : MODE_NORMAL);
             asyncPinger.execute(item);
         }else{
@@ -290,7 +291,7 @@ public class PingListManager implements OnItemClickListener,
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         if(netInfo !=null && netInfo.isConnected()){
-            AsyncListPing asyncPinger = new AsyncListPing(context, this,
+            AsyncListPing asyncPinger = new AsyncListPing(this,
                                     (nerdViewOn)? MODE_NERD : MODE_NORMAL);
             asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
         }else{

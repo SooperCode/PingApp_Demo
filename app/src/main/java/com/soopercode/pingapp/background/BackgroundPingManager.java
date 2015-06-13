@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.soopercode.pingapp.MainActivity;
 import com.soopercode.pingapp.PrefsManager;
 
 /**
@@ -21,6 +20,8 @@ import com.soopercode.pingapp.PrefsManager;
  * @author  Ria
  */
 public class BackgroundPingManager extends BroadcastReceiver{
+
+    private static final String TAG = BackgroundPingManager.class.getSimpleName();
 
     private Context context;
     private AlarmManager alarmManager;
@@ -87,7 +88,7 @@ public class BackgroundPingManager extends BroadcastReceiver{
         alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         pendingIntent = PendingIntent.getService(context, 0, backgroundPinging, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+2000, pingInterval, pendingIntent);
-        Log.d(MainActivity.TAG, "BGPingManager: Alarm is set!");
+        Log.d(TAG, "BGPingManager: Alarm is set!");
 
         // set pinging status to active:
         PrefsManager.setBgPingingActive(context, true);
@@ -108,6 +109,6 @@ public class BackgroundPingManager extends BroadcastReceiver{
         }
         // set pinging status to inactive
         PrefsManager.setBgPingingActive(context, false);
-        Log.d(MainActivity.TAG, "BGPingManager: canceled bg-pinging");
+        Log.d(TAG, "BGPingManager: canceled bg-pinging");
     }
 }
