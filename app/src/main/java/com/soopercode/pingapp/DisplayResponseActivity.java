@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.soopercode.pingapp.utils.ResponseCodeEvaluator;
+import com.soopercode.pingapp.utils.Utility;
 
 /**
  * Displays the server response in a dialog box when the user
@@ -52,6 +53,6 @@ public class DisplayResponseActivity extends Activity {
         }
         code.setText("Status Code " + String.format("%03d", responseCode));
         msg.setText("(" + responseMsg + ")");
-        text.setText(new ResponseCodeEvaluator(this).generateResponse(responseCode));
+        text.setText(ResponseCodeEvaluator.generateResponse(this, responseCode));
     }
 }

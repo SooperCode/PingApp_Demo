@@ -21,6 +21,7 @@ import com.soopercode.pingapp.MainActivity;
 import com.soopercode.pingapp.PrefsManager;
 import com.soopercode.pingapp.R;
 import com.soopercode.pingapp.background.BackgroundPingManager;
+import com.soopercode.pingapp.utils.Utility;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -33,12 +34,12 @@ import java.util.List;
  *
  * @author  Ria
  */
-public class PingListManager implements OnItemClickListener,
-                                            OnItemLongClickListener, OnAsyncCompleted {
+public class PingListManager implements OnAsyncCompleted {
 
     private static final String TAG = PingListManager.class.getSimpleName();
 
-    private Activity context;
+    //private Activity context;
+    private MainActivity mainActivity;
     private RecyclerAdapter recyclerAdapter;
     private List<PingItem> pingList = new ArrayList<>();
     private RecyclerView pingListRecycler;
@@ -66,11 +67,10 @@ public class PingListManager implements OnItemClickListener,
      * Creates a new PingListManager with reference to MainActivity
      * and the {@link ListView} this manager is going to manage.
      *
-     * @param context       MainActivity's Context
      * @param pingListView  A reference to the ListView containing the watchlist
      */
-    public PingListManager(Activity context, RecyclerView pingListView){
-        this.context = context; //TODO: refactor this code - it hurts people.
+    public PingListManager(MainActivity mainActivity, RecyclerView pingListView){
+        this.mainActivity = mainActivity;
         this.pingListRecycler = pingListView;
     }
 
@@ -81,64 +81,45 @@ public class PingListManager implements OnItemClickListener,
      */
     public void createListView(boolean nerdViewOn){
 
-        recyclerAdapter = new RecyclerAdapter(context, pingList, nerdViewOn);
+        recyclerAdapter = new RecyclerAdapter(mainActivity, pingList, nerdViewOn);
         pingListRecycler.setHasFixedSize(true);
-        pingListRecycler.setLayoutManager(new LinearLayoutManager(context));
+        pingListRecycler.setLayoutManager(new LinearLayoutManager(mainActivity));
         pingListRecycler.setAdapter(recyclerAdapter);
     }
 
-    /**
-     * Called when an item in the watchlist has been clicked.
-     * Refreshes the item's state by calling {@code pingHostFromList}.
-     *
-     * @param parent    The AdapterView where the click happened [quote]
-     * @param view      The View within the AdapterView that was clicked [quote]
-     * @param position  The position of the item clicked
-     * @param id        The row id of the item clicked
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        pingHostFromList(pingList.get(position));
-    }
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        pingHostFromList(pingList.get(position));
+//    }
 
-    /**
-     * Called when an item in the watchlist has been clicked and held.
-     * Opens a dialog with the option to delete this item from the list.
-     *
-     * @param parent    The AdapterView where the click happened [quote]
-     * @param view      The View within the AdapterView that was clicked [quote]
-     * @param position  The position of the item clicked
-     * @param id        The row id of the item clicked
-     * @return          true to indicate that this callback has consumed the long click
-     *                  (false would cause {@code onItemClick} to be invoked)
-     */
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        new AlertDialog.Builder(context)
-                .setTitle("Confirm")
-                .setMessage("Delete '" + pingList.get(position).getHostname() + "'?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pingList.remove(position);
-                        if(pingList.isEmpty()){
-                            clearList();
-                        }else{
-                            recyclerAdapter.notifyDataSetChanged();
-                            saveList();
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setCancelable(true)
-                .show();
-        return true;
-    }
+
+//    @Override
+//    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+//        new AlertDialog.Builder(context)
+//                .setTitle("Confirm")
+//                .setMessage("Delete '" + pingList.get(position).getHostname() + "'?")
+//                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        pingList.remove(position);
+//                        if(pingList.isEmpty()){
+//                            clearList();
+//                        }else{
+//                            recyclerAdapter.notifyDataSetChanged();
+//                            saveList();
+//                        }
+//                    }
+//                })
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                })
+//                .setCancelable(true)
+//                .show();
+//        return true;
+//    }
 
     /**
      * Reads in the hostnames from a locally saved file
@@ -182,7 +163,7 @@ public class PingListManager implements OnItemClickListener,
     private void saveList(){
         OutputStreamWriter out = null;
         try{
-            out = new OutputStreamWriter(context.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE));
+            out = new OutputStreamWriter(mainActivity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE));
             for(int i=0; i<pingList.size(); i++){
                 out.write(pingList.get(i).getHostname() + "\n");
             }
@@ -204,18 +185,18 @@ public class PingListManager implements OnItemClickListener,
         if(!pingList.isEmpty()){
             pingList.clear();
         }
-        PrefsManager.setPingListEmpty(context, true);
+        PrefsManager.setPingListEmpty(mainActivity.getApplicationContext(), true);
 
         //tell BGPManager to deactivate bg-pinging if it's active.
-        Intent intent = new Intent(context, BackgroundPingManager.class);
+        Intent intent = new Intent(mainActivity, BackgroundPingManager.class);
         intent.putExtra("switchOn", 2); //2 = turn it off
-        context.sendBroadcast(intent);
+        mainActivity.sendBroadcast(intent);
         //turn off light
 //        ImageView light = (ImageView)context.findViewById(R.id.imgWatchlistOn);
 //        light.setImageDrawable(context.getResources().getDrawable(R.drawable.off_30x30));
 //        pingListAdapter.notifyDataSetChanged();
         //delete file
-        context.deleteFile(MainActivity.FILENAME);
+        mainActivity.deleteFile(MainActivity.FILENAME);
     }
 
     /**
@@ -227,7 +208,7 @@ public class PingListManager implements OnItemClickListener,
     public void addNewHost(String validatedHostname){
         for(PingItem item : pingList){
             if(validatedHostname.equals(item.getHostname())){
-                Toast.makeText(context, context.getString(R.string.doublehost_toast), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, mainActivity.getString(R.string.doublehost_toast), Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -243,7 +224,7 @@ public class PingListManager implements OnItemClickListener,
     private void addHostToList(String validatedHostname){
         // if this is the first host in the list, set list status from empty to not-empty:
         if(pingList.isEmpty()) {
-            PrefsManager.setPingListEmpty(context, false);
+            PrefsManager.setPingListEmpty(mainActivity.getApplicationContext(), false);
         }
         // make new Ping-Item, add to list, save list to file, ping host
         PingItem host = new PingItem(validatedHostname);
@@ -260,14 +241,12 @@ public class PingListManager implements OnItemClickListener,
      * @param item  The {@link PingItem} representing the host to be pinged
      */
     private void pingHostFromList(PingItem item){
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-        if(netInfo !=null && netInfo.isConnected()){
+        if(Utility.gotConnection(mainActivity.getApplicationContext())){
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(item);
         }else{
-            Toast.makeText(context, context.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -276,14 +255,12 @@ public class PingListManager implements OnItemClickListener,
      * using {@link AsyncListPing}.
      */
     public void pingListNow(){
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-        if(netInfo !=null && netInfo.isConnected()){
+        if(Utility.gotConnection(mainActivity.getApplicationContext())){
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
         }else{
-            Toast.makeText(context, context.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
         }
     }
 

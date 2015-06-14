@@ -14,18 +14,6 @@ import java.util.Random;
  */
 public class ResponseCodeEvaluator {
 
-    private Context context;
-
-    /**
-     * Creates a {@code ResponseCodeEvaluator} with the Context
-     * needed to retrieve data from the string resources of this App.
-     *
-     * @param context   The current Context
-     */
-    public ResponseCodeEvaluator(Context context){
-        this.context = context;
-    }
-
     /**
      * Evaluates the given Response Code based on the officially defined
      * HyperText Transfer Protocol status code categories and generates
@@ -34,19 +22,19 @@ public class ResponseCodeEvaluator {
      * @param responseCode  A HTTP status code
      * @return              The generated String resource
      */
-    public String generateResponse(int responseCode){
+    public static String generateResponse(Context context, int responseCode){
         if(100 <= responseCode && responseCode <= 199){
-            return getResponse(10, 4);
+            return getResponse(context, 10, 4);
         }else if(200 <= responseCode && responseCode <= 299) {
-            return getResponse(20, 5);
+            return getResponse(context, 20, 5);
         }else if(300 <= responseCode && responseCode <= 399){
-            return getResponse(30, 4);
+            return getResponse(context, 30, 4);
         }else if(400 <= responseCode && responseCode <= 499){
-            return getResponse(40, 6);
+            return getResponse(context, 40, 6);
         }else if(500 <= responseCode && responseCode <= 599){
-            return getResponse(50, 5);
+            return getResponse(context, 50, 5);
         }else{
-            return getResponse(0, 5);
+            return getResponse(context, 0, 5);
         }
     }
 
@@ -59,7 +47,7 @@ public class ResponseCodeEvaluator {
      * @param number        Number of available Strings to choose from
      * @return              The randomly chosen {@code String}
      */
-    private String getResponse(int category, int number){
+    private static String getResponse(Context context, int category, int number){
         String response = "";
         Random randy = new Random();
         int choice = category + randy.nextInt(number);

@@ -1,19 +1,57 @@
 package com.soopercode.pingapp.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.util.Patterns;
 
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 /**
- * Verifies whether the user's input represents a valid URL.
- *
- * @author Ria
+ * Created by ria on 6/14/15.
  */
-public class UrlValidator {
+public class Utility {
 
-    private static final String TAG = UrlValidator.class.getSimpleName();
+    private static final String TAG = Utility.class.getSimpleName();
+
+    /**
+     * Check network connection
+     */
+    public static boolean gotConnection(Context context){
+        ConnectivityManager cm = (ConnectivityManager)context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+        return networkInfo !=null && networkInfo.isConnected();
+    }
+
+
+    /**
+     * Attempts to retrieve the IP-address of the specified host
+     * using {@link java.net.InetAddress}.
+     *
+     * @param hostname  The host URL as a String
+     * @return          The host's IP as a String,
+     *                  or the String "unknown host" if no IP has been obtained
+     */
+    public static String getIP(String hostname){
+        if(hostname.equals("www.somewebsite.com")){
+            return "88.102.237.130";
+        }
+        InetAddress host;
+        try{
+            host = InetAddress.getByName(hostname);
+            return host.getHostAddress();
+        }catch(UnknownHostException uhe){
+            Log.d(TAG, "IPGenerator: " + uhe.toString());
+            return "unknown host";
+        }
+    }
+
 
     /**
      * Verifies whether the user's input constitutes a valid URL using a
@@ -49,4 +87,3 @@ public class UrlValidator {
         return usersHost;
     }
 }
-

@@ -21,7 +21,7 @@ import com.soopercode.pingapp.help.HelpActivity;
 import com.soopercode.pingapp.listview.PingListManager;
 import com.soopercode.pingapp.utils.HttpPinger;
 import com.soopercode.pingapp.utils.StupidUserException;
-import com.soopercode.pingapp.utils.UrlValidator;
+import com.soopercode.pingapp.utils.Utility;
 
 /**
  * Represents the Main Screen of this Application.
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private boolean validateHostname(String hostname){
         try{
-            validatedHost = UrlValidator.validateHostname(hostname);
+            validatedHost = Utility.validateHostname(hostname);
             usersHost.setText(validatedHost);
             //check the dummy-state:
             if(dummyCounter !=0){

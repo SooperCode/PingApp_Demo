@@ -24,12 +24,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private List<PingItem> pingItems;
     private boolean nerdViewOn;
-    private ResponseCodeEvaluator evaluator;
+    private Context context;
 
     public RecyclerAdapter(Context context, List<PingItem> pingItems, boolean nerdViewOn){
+        this.context = context;
         this.pingItems = pingItems;
         this.nerdViewOn = nerdViewOn;
-        evaluator = new ResponseCodeEvaluator(context);
     }
 
     /* Create new views - invoked by recycler view's layout manager */
@@ -40,7 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         if(!nerdViewOn){
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.cardview_layout, parent, false);
-        }else{ // TODO: refactor into just one cardview layout...
+        }else{ // TODO: refactor into just one cardview layout...(?)
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.cardview_nerd_layout, parent, false);
         }
@@ -63,10 +63,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }else{
             holder.hostNerd.setText(pingItem.getHostname());
             int responseCode = pingItem.getResponseCode();
-//            int responseColor = getResponseColor(responseCode);
-//            if(responseColor==Color.RED){
-//                holder.hostNerd.setTextColor(responseColor);
-//            }
             if(pingItem.isAvailable()){
                 holder.hostNerd.setTextColor(Color.WHITE);
             }else{
@@ -76,7 +72,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             holder.responseCode.setTextColor(getResponseColor(responseCode));
             holder.hostIp.setText(pingItem.getIp());
             // use the evaluator to get the appropriate text to display
-            holder.responseText.setText(evaluator.generateResponse(responseCode));
+            holder.responseText.setText(
+                    ResponseCodeEvaluator.generateResponse(context, responseCode));
         }
     }
 

@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
 import com.soopercode.pingapp.utils.HttpPinger;
-import com.soopercode.pingapp.utils.IPGenerator;
 import com.soopercode.pingapp.utils.SocketPinger;
+import com.soopercode.pingapp.utils.Utility;
 
 /**
  * AsyncTask that handles all operations necessary for
@@ -54,7 +54,7 @@ public class AsyncListPing extends AsyncTask<PingItem, Void, Void> {
             String hostname = item.getHostname();
             item.setAvailable(socketPinger.checkConnection(hostname));
             item.setResponseCode(httpPinger.getResponseCode(hostname));
-            item.setIp(IPGenerator.getIP(hostname));
+            item.setIp(Utility.getIP(hostname));
         }
         return null;
     }
