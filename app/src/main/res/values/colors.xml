@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#3F51B5</color>
-    <color name="primary_dark">#303F9F</color>
-    <color name="primary_light">#C5CAE9</color>
+    <!-- indigo -->
+    <color name="primary">#3F51B5</color>   <!-- 500 tint -->
+    <color name="primary_dark">#303F9F</color> <!-- 700 tint -->
+    <color name="primary_light">#C5CAE9</color> <!-- 100 tint -->
+    <color name="indigo_800">#283593</color>
+    <color name="indigo_900">#1A237E</color>
+
     <color name="accent">#7C4DFF</color>
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>

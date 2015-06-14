@@ -63,6 +63,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }else{
             holder.hostNerd.setText(pingItem.getHostname());
             int responseCode = pingItem.getResponseCode();
+//            int responseColor = getResponseColor(responseCode);
+//            if(responseColor==Color.RED){
+//                holder.hostNerd.setTextColor(responseColor);
+//            }
+            if(pingItem.isAvailable()){
+                holder.hostNerd.setTextColor(Color.WHITE);
+            }else{
+                holder.hostNerd.setTextColor(Color.RED);
+            }
             holder.responseCode.setText(String.format("%03d", responseCode));
             holder.responseCode.setTextColor(getResponseColor(responseCode));
             holder.hostIp.setText(pingItem.getIp());
