@@ -51,15 +51,15 @@ public class PingListManager implements OnItemClickListener,
             "www.serverdown.nl",
             "www.hostwithnoname.com",
             "www.yahoo.dk",
-//            "www.yahoo.com",
-//            "www.yahoo.nl",
-//            "www.test.com",
-//            "www.lalala.de",
-//            "www.google.com",
-//            "google.com",
-//            "google.de",
-//            "google.nl",
-//            "google.dk"
+            "www.yahoo.com",
+            "www.yahoo.nl",
+            "www.test.com",
+            "www.lalala.de",
+            "www.google.com",
+            "google.com",
+            "google.de",
+            "google.nl",
+            "google.dk"
     };
 
     /**
