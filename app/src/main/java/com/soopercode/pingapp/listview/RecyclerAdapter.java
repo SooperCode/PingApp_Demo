@@ -3,7 +3,6 @@ package com.soopercode.pingapp.listview;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private List<PingItem> pingItems;
     private boolean nerdViewOn;
     private Context context;
+    RecyclerView recyclerView;
 
     public RecyclerAdapter(Context context, List<PingItem> pingItems, boolean nerdViewOn){
         this.context = context;
@@ -36,20 +36,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     @Override
     public RecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view;
-        if(!nerdViewOn){
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.cardview_layout, parent, false);
-        }else{ // TODO: refactor into just one cardview layout...(?)
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.cardview_nerd_layout, parent, false);
-        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                nerdViewOn? R.layout.cardview_nerd_layout : R.layout.cardview_layout,
+                parent, false);
+        // TODO: refactor into just one cardview layout...(?)
+
+        recyclerView = (RecyclerView)parent;
+
         return new RecyclerHolder(view);
     }
 
     /* Replace the contents of a view (invoked by the layout manager) */
     @Override
     public void onBindViewHolder(RecyclerHolder holder, int position) {
+
+        // if last item is visible, create "padding" on the bottom
+        // to enable scrolling the last item above the floating action button
+        holder.invisibleView.setVisibility(position == pingItems.size()-1 ?
+                                                View.INVISIBLE : View.GONE);
+
         PingItem pingItem = pingItems.get(position);
         if(!nerdViewOn){
             holder.host.setText(pingItem.getHostname());
@@ -63,11 +68,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }else{
             holder.hostNerd.setText(pingItem.getHostname());
             int responseCode = pingItem.getResponseCode();
-            if(pingItem.isAvailable()){
-                holder.hostNerd.setTextColor(Color.WHITE);
-            }else{
-                holder.hostNerd.setTextColor(Color.RED);
-            }
+            holder.hostNerd.setTextColor(pingItem.isAvailable()? Color.WHITE : Color.RED);
             holder.responseCode.setText(String.format("%03d", responseCode));
             holder.responseCode.setTextColor(getResponseColor(responseCode));
             holder.hostIp.setText(pingItem.getIp());
@@ -111,8 +112,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         TextView responseCode;
         TextView responseText;
 
+        // invisible view - simulates bottom margin in last item
+        View invisibleView;
+
         public RecyclerHolder(View itemView) {
             super(itemView);
+
             host = (TextView)itemView.findViewById(R.id.listview_host);
             status = (ImageView)itemView.findViewById(R.id.listview_status);
 
@@ -120,6 +125,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             hostIp = (TextView)itemView.findViewById(R.id.nerdview_hostIP);
             responseCode = (TextView)itemView.findViewById(R.id.nerdview_responseCode);
             responseText = (TextView)itemView.findViewById(R.id.nerdview_responseText);
+
+            invisibleView = itemView.findViewById(R.id.view_invisible);
         }
     }
+
 }

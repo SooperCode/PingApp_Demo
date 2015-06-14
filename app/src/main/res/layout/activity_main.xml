@@ -49,22 +49,22 @@
         android:id="@+id/recyclerview_pinglist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="50dp"
+        android:paddingTop="2dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:text="Background Pinging is OFF"
-        android:textStyle="italic"
-        android:textColor="@color/primary_light"
-        android:background="@color/indigo_900"
-        app:layout_anchor="@id/recyclerview_pinglist"
-        app:layout_anchorGravity="bottom"
-        android:layout_marginRight="3dp"
-        android:layout_marginLeft="3dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:text="Background Pinging is OFF"-->
+        <!--android:textStyle="italic"-->
+        <!--android:textColor="@color/primary_light"-->
+        <!--android:background="@color/indigo_900"-->
+        <!--app:layout_anchor="@id/recyclerview_pinglist"-->
+        <!--app:layout_anchorGravity="bottom"-->
+        <!--android:layout_marginRight="3dp"-->
+        <!--android:layout_marginLeft="3dp"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

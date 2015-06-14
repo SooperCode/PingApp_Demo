@@ -1,19 +1,10 @@
 package com.soopercode.pingapp.listview;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -80,11 +71,11 @@ public class PingListManager implements OnAsyncCompleted {
      * @param nerdViewOn    States whether Nerd View is activated or not
      */
     public void createListView(boolean nerdViewOn){
-
         recyclerAdapter = new RecyclerAdapter(mainActivity, pingList, nerdViewOn);
         pingListRecycler.setHasFixedSize(true);
         pingListRecycler.setLayoutManager(new LinearLayoutManager(mainActivity));
         pingListRecycler.setAdapter(recyclerAdapter);
+
     }
 
 //    @Override
@@ -208,7 +199,8 @@ public class PingListManager implements OnAsyncCompleted {
     public void addNewHost(String validatedHostname){
         for(PingItem item : pingList){
             if(validatedHostname.equals(item.getHostname())){
-                Toast.makeText(mainActivity, mainActivity.getString(R.string.doublehost_toast), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, mainActivity.getString(R.string.doublehost_toast),
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -246,7 +238,8 @@ public class PingListManager implements OnAsyncCompleted {
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(item);
         }else{
-            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -260,7 +253,8 @@ public class PingListManager implements OnAsyncCompleted {
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
         }else{
-            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
