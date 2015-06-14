@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.soopercode.pingapp.MainActivity;
-import com.soopercode.pingapp.OnAsyncCompleted;
 import com.soopercode.pingapp.PrefsManager;
 import com.soopercode.pingapp.R;
 import com.soopercode.pingapp.background.BackgroundPingManager;
@@ -39,32 +38,28 @@ public class PingListManager implements OnItemClickListener,
 
     private static final String TAG = PingListManager.class.getSimpleName();
 
-    private static final int MODE_NORMAL = 1;
-    private static final int MODE_NERD = 2;
-
     private Activity context;
     private RecyclerAdapter recyclerAdapter;
     private List<PingItem> pingList = new ArrayList<>();
     private RecyclerView pingListRecycler;
-    private boolean nerdViewOn;
 
     // FOR TESTING:
     private static final String[] dummyHosts = {
             "www.google.de",
             "www.google.nl",
-            "www.google.dk",
-            "www.google.com",
-            "www.google.at",
-            "www.yahoo.dk",
-            "www.yahoo.com",
-            "www.yahoo.nl",
-            "www.test.com",
-            "www.lalala.de",
+            "www.somewebsite.com",
+            "www.serverdown.nl",
             "www.hostwithnoname.com",
-            "google.com",
-            "google.de",
-            "google.nl",
-            "google.dk"
+            "www.yahoo.dk",
+//            "www.yahoo.com",
+//            "www.yahoo.nl",
+//            "www.test.com",
+//            "www.lalala.de",
+//            "www.google.com",
+//            "google.com",
+//            "google.de",
+//            "google.nl",
+//            "google.dk"
     };
 
     /**
@@ -86,11 +81,6 @@ public class PingListManager implements OnItemClickListener,
      */
     public void createListView(boolean nerdViewOn){
 
-        if(!nerdViewOn) {
-            this.nerdViewOn = false;
-        }else{
-            this.nerdViewOn = true;
-        }
         recyclerAdapter = new RecyclerAdapter(context, pingList, nerdViewOn);
         pingListRecycler.setHasFixedSize(true);
         pingListRecycler.setLayoutManager(new LinearLayoutManager(context));
@@ -274,8 +264,7 @@ public class PingListManager implements OnItemClickListener,
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         if(netInfo !=null && netInfo.isConnected()){
-            AsyncListPing asyncPinger = new AsyncListPing(this,
-                                    (nerdViewOn)? MODE_NERD : MODE_NORMAL);
+            AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(item);
         }else{
             Toast.makeText(context, context.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
@@ -291,8 +280,7 @@ public class PingListManager implements OnItemClickListener,
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         if(netInfo !=null && netInfo.isConnected()){
-            AsyncListPing asyncPinger = new AsyncListPing(this,
-                                    (nerdViewOn)? MODE_NERD : MODE_NORMAL);
+            AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
         }else{
             Toast.makeText(context, context.getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
@@ -303,15 +291,10 @@ public class PingListManager implements OnItemClickListener,
      * Called after {@link AsyncListPing} has completed a pinging task.
      * Specifies stuff to be done in case pinging was successful, in this
      * case our watchlist view is caused to be updated.
-     *
-     * @param okay  boolean indicating that pinging operation was successfully completed
      */
     @Override
-    public void onAsyncPingCompleted(boolean okay) {
-        if(okay){
-            recyclerAdapter.notifyDataSetChanged();
-        }
-
+    public void onAsyncPingCompleted() {
+        recyclerAdapter.notifyDataSetChanged();
     }
 
 }

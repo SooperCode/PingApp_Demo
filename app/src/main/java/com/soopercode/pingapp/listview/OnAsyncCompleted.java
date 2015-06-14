@@ -1,4 +1,4 @@
-package com.soopercode.pingapp;
+package com.soopercode.pingapp.listview;
 
 /**
  * Interface definition for a callback to be invoked when AsyncListPing
@@ -14,5 +14,5 @@ public interface OnAsyncCompleted {
      *
      * @param okay  Signals that pinging operation was successfully completed
      */
-    void onAsyncPingCompleted(boolean okay);
+    void onAsyncPingCompleted();
 }

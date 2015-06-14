@@ -3,7 +3,6 @@ package com.soopercode.pingapp.listview;
 import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
-import com.soopercode.pingapp.OnAsyncCompleted;
 import com.soopercode.pingapp.utils.HttpPinger;
 import com.soopercode.pingapp.utils.IPGenerator;
 import com.soopercode.pingapp.utils.SocketPinger;
@@ -15,25 +14,19 @@ import com.soopercode.pingapp.utils.SocketPinger;
  *
  * @author  Ria
  */
-public class AsyncListPing extends AsyncTask<PingItem, Void, Boolean> {
+public class AsyncListPing extends AsyncTask<PingItem, Void, Void> {
 
     private OnAsyncCompleted completer;
-    private int taskId;
     private ProgressBar progressWheel;
 
     /**
      * Creates a new instance of this class with the references necessary
-     * for the operations to be performed, as well as an ID number indicating
-     * the specific kind of task to be done. The ID number is chosen by
-     * {@link PingListManager}, who instantiates and starts this AsyncTask,
-     * according to whether the watchlist is currently set to Nerd View or not.
+     * for the operations to be performed.
      *
      * @param completer     Reference to the object to be notified after the task is done
-     * @param taskId        ID number indicating the specific kind of task to be performed
      */
-    public AsyncListPing(OnAsyncCompleted completer, int taskId){
+    public AsyncListPing(OnAsyncCompleted completer){
         this.completer = completer;
-        this.taskId = taskId;
     }
 
     /**
@@ -48,42 +41,32 @@ public class AsyncListPing extends AsyncTask<PingItem, Void, Boolean> {
 
     /**
      * Pings the specified hosts on a background thread using the appropriate
-     * helper class, based on the task ID that was passed to the constructor.
-     * The specified parameters are those passed to {@link #execute}
-     * by {@link PingListManager} when calling this task.
+     * helper class.
      *
      * @param items The PingItems representing the hosts in the watchlist
-     * @return      true after pinging is done
      */
     @Override
-    protected Boolean doInBackground(PingItem... items) {
+    protected Void doInBackground(PingItem... items) {
 
-        if(taskId ==1){
-            SocketPinger socketPinger = new SocketPinger();
-            for(PingItem item : items){
-                item.setAvailable(socketPinger.checkConnection(item.getHostname()));
-            }
-        }else if(taskId ==2){
-            HttpPinger httpPinger = new HttpPinger();
-            for(PingItem item : items){
-                item.setResponseCode(httpPinger.getResponseCode(item.getHostname()));
-                item.setIp(IPGenerator.getIP(item.getHostname()));
-            }
+        SocketPinger socketPinger = new SocketPinger();
+        HttpPinger httpPinger = new HttpPinger();
+        for(PingItem item : items){
+            String hostname = item.getHostname();
+            item.setAvailable(socketPinger.checkConnection(hostname));
+            item.setResponseCode(httpPinger.getResponseCode(hostname));
+            item.setIp(IPGenerator.getIP(hostname));
         }
-        return true;
+        return null;
     }
 
     /**
-     * Runs on the UI thread after {@link #doInBackground}. The specified
-     * parameter is the value returned by {@link #doInBackground}. [SDK quote]
+     * Runs on the UI thread after {@link #doInBackground}.
      * Notifies the completer, which is {@link PingListManager} in this case,
      * of the completion of this task and hides the progress wheel.
-     *
-     * @param okay  Status received by doInBackground
      */
     @Override
-    protected void onPostExecute(Boolean okay) {
-        completer.onAsyncPingCompleted(okay);
+    protected void onPostExecute(Void nix) {
+        completer.onAsyncPingCompleted();
 //        progressWheel.setVisibility(View.INVISIBLE);
     }
 }
