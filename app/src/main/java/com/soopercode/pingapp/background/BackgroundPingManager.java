@@ -54,7 +54,7 @@ public class BackgroundPingManager extends BroadcastReceiver{
 
         // get ping interval:
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String stringValue = sharedPrefs.getString("listprefs_intervals", "3h");
+        String stringValue = sharedPrefs.getString("listprefs_intervals", "10800000");
         pingInterval = Long.parseLong(stringValue);
 
         // check for message from SettingsActivity or PingListManager:
