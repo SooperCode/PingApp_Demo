@@ -7,10 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -78,8 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         // add recycler view fragment
-        Fragment fragment = new RecyclerFragment();
-        addFragment(fragment);
+        if(savedInstanceState == null){
+            addFragment(new RecyclerFragment());
+        }
     }
 
     private void addFragment(Fragment fragment){
