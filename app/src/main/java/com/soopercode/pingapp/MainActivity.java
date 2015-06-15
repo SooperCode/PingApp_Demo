@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.soopercode.pingapp.help.HelpActivity;
-import com.soopercode.pingapp.listview.PingListManager;
 import com.soopercode.pingapp.utils.HttpPinger;
 import com.soopercode.pingapp.utils.StupidUserException;
 import com.soopercode.pingapp.utils.Utility;
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView prompt;
     private ImageView onOfLight;
     private String validatedHost;
-    private PingListManager pingListManager;
 
     /**
      * Initializes and sets up the App's Main Screen.
@@ -61,44 +59,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: clean up...
-//        usersHost = (EditText) findViewById(R.id.usersHost);
-//        prompt = (TextView) findViewById(R.id.promptDisplay);
-//
-//        // set up buttons
-//        Button pingButton = (Button) findViewById(R.id.buttonPingNow);
-//        pingButton.setOnClickListener(this);
-//        Button addButton = (Button) findViewById(R.id.buttonAdd);
-//        addButton.setOnClickListener(this);
-//        ImageButton refreshButton = (ImageButton) findViewById(R.id.buttonRefresh);
-//        refreshButton.setOnClickListener(this);
-//        ImageButton eraseButton = (ImageButton) findViewById(R.id.buttonErase);
-//        eraseButton.setOnClickListener(this);
-
-        setSupportActionBar(initToolbar());
-
-        // set up list
-        RecyclerView pingListView = (RecyclerView) findViewById(R.id.recyclerview_pinglist);
-        pingListManager = new PingListManager(this, pingListView);
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean nerdPref = sharedPrefs.getBoolean("checkbox_nerdview", false);
-        pingListManager.createListView(nerdPref);
-        pingListManager.loadList();
+        // initialize toolbar
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.showOverflowMenu();
+        setSupportActionBar(toolbar);
 
         // after installation of the app, set example host in the list:
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isFirstRun = sharedPrefs.getBoolean("firstRun", true);
         if(isFirstRun){
-            pingListManager.addNewHost("www.google.com");
+            //TODO: .addNewHost("www.google.com");
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean("firstRun", false).apply();
         }
     }
 
-    private Toolbar initToolbar(){
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.showOverflowMenu();
-        return toolbar;
-    }
 
     /**
      * Called after {@link #onCreate} &mdash; or after {@link #onRestart} when
@@ -106,32 +81,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * user. [SDK quote]
      * Checks 'dummyCounter' status and sets prompt-text back to normal if necessary.
      */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(dummyCounter !=0){
-            prompt.setTextAppearance(this, R.style.defaultStyle);
-            prompt.setText(R.string.promptDisplay);
-            dummyCounter = 0;
-        }
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if(dummyCounter !=0){
+//            prompt.setTextAppearance(this, R.style.defaultStyle);
+//            prompt.setText(R.string.promptDisplay);
+//            dummyCounter = 0;
+//        }
+//    }
 
     /**
      * Called after {@link #onRestoreInstanceState}, {@link #onRestart}, or
      * {@link #onPause}. [SDK quote]
      * Checks if background pinging is activated & displays green light when it is.
      */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // set up watchlist light
-//        onOfLight = (ImageView) findViewById(R.id.imgWatchlistOn);
-//        if(PrefsManager.isBgPingingActive(this)){
-//            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.on_30x30));
-//        }else{
-//            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.off_30x30));
-//        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // set up watchlist light
+////        onOfLight = (ImageView) findViewById(R.id.imgWatchlistOn);
+////        if(PrefsManager.isBgPingingActive(this)){
+////            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.on_30x30));
+////        }else{
+////            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.off_30x30));
+////        }
+//    }
 
     /**
      * Called every time a View on the MainScreen is clicked
@@ -312,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(item.getItemId()){
 
             case R.id.menu_deleteList:
-                pingListManager.clearList();
+//                pingListManager.clearList();
                 onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.off_30x30));
                 return true;
 
@@ -353,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult called");
         if(requestCode==CHANGE_SETTINGS_REQUEST){
-            updateSettings();
+//            updateSettings();
         }
     }
 
@@ -361,14 +336,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Sets the watchlist to Nerd View or normal view according
      * to the current configuration.
      */
-    private void updateSettings() {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if(sharedPrefs.getBoolean("checkbox_nerdview", false)){
-            pingListManager.createListView(true);
-        }else{
-            pingListManager.createListView(false);
-        }
-        pingListManager.pingListNow();
-    }
+//    private void updateSettings() {
+//        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        if(sharedPrefs.getBoolean("checkbox_nerdview", false)){
+//            pingListManager.createListView(true);
+//        }else{
+//            pingListManager.createListView(false);
+//        }
+//        pingListManager.pingListNow();
+//    }
 
 }

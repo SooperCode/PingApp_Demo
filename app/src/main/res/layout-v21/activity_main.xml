@@ -11,7 +11,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:paddingTop="50dp" >
+        android:paddingTop="50dp"
+         >
         <!-- removed android:fitsSystemWindows="true"
             & added padding because menu button wasn't showing.
         this issue is known bug:
@@ -51,12 +52,12 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_pinglist"
+    <fragment
+        android:name="com.soopercode.pingapp.listview.RecyclerFragment"
+        android:id="@+id/fragment_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="2dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -67,20 +68,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="10dp"
         android:src="@drawable/ic_add"/>
-
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="35dp"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:text="Background Pinging is OFF"-->
-        <!--android:textStyle="italic"-->
-        <!--android:textColor="@color/primary_light"-->
-        <!--android:background="@color/indigo_900"-->
-        <!--android:layout_marginRight="4dp"-->
-        <!--android:layout_marginLeft="4dp"-->
-        <!--app:layout_anchor="@id/recyclerview_pinglist"-->
-        <!--app:layout_anchorGravity="bottom"/>-->
 
 </android.support.design.widget.CoordinatorLayout>
 
