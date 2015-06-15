@@ -1,14 +1,12 @@
 package com.soopercode.pingapp.help;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.soopercode.pingapp.R;
 
@@ -19,7 +17,7 @@ import java.util.List;
  *
  * @author  Ria
  */
-public class HelpActivity extends FragmentActivity {
+public class HelpActivity extends AppCompatActivity{
 
     private List<HelpContent> contents;
 
@@ -37,11 +35,14 @@ public class HelpActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_help);
 
-        ViewPager viewPager = new ViewPager(this);
-        viewPager.setId(R.id.viewPager); //defined in values/ids.xml
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_help);
+        toolbar.showOverflowMenu();
+        setSupportActionBar(toolbar);
+
+        ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager_help);
         viewPager.setPageMargin(30);
-        setContentView(viewPager);
         contents = HelpPages.getInstance(this).getContents();
 
         FragmentManager fragMan = getSupportFragmentManager();
@@ -77,26 +78,6 @@ public class HelpActivity extends FragmentActivity {
             /* not implemented */
             @Override public void onPageScrollStateChanged(int state) { }
         });
-
-        // TODO: need Toolbar for HelpActivity
-        // allow for Up-navigation on the action bar
-//        ActionBar actionBar = getActionBar();
-//        if(actionBar !=null){
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
     }
 
-    /**
-     * Called when user clicks the Up-button on the action bar.
-     * Navigates to {@link com.soopercode.pingapp.MainActivity}.
-     *
-     * @param item      The item selected, in this case the action bar's Up-button
-     * @return          true to signal that request has been consumed and
-     *                  no further processing is necessary
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        NavUtils.navigateUpFromSameTask(this);
-        return true;
-    }
 }

@@ -7,20 +7,18 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_settings"
+        android:id="@+id/toolbar_help"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="8dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:background="?attr/colorPrimary"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        android:title="PingApp Settings"/>
+        android:title="PingApp Help"/>
 
-    <fragment
-        android:id="@+id/prefs_fragment"
-        android:name="com.soopercode.pingapp.SettingsActivity$PrefsFragment"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_help"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

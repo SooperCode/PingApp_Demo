@@ -1,6 +1,5 @@
 package com.soopercode.pingapp;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,8 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +24,7 @@ import com.soopercode.pingapp.help.HelpActivity;
  * @author  Ria
  */
 
-public class SettingsActivity extends Activity{
+public class SettingsActivity extends AppCompatActivity{
 
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
@@ -41,11 +41,10 @@ public class SettingsActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        //TODO: need Toolbar for Settings.
-        ActionBar actionBar = getActionBar();
-        if(actionBar !=null){
-            actionBar.setDisplayHomeAsUpEnabled(true); //allows Up-navigation
-        }
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_settings);
+        toolbar.showOverflowMenu();
+        setSupportActionBar(toolbar);
     }
 
     /**
@@ -74,12 +73,10 @@ public class SettingsActivity extends Activity{
             case R.id.settingsmenu_help:
                 startActivity(new Intent(this, HelpActivity.class));
                 return true;
-            //respond to the actionbar's Up-button:
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
