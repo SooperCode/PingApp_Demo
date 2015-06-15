@@ -45,9 +45,8 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <fragment
-        android:name="com.soopercode.pingapp.listview.RecyclerFragment"
-        android:id="@+id/fragment_recyclerview"
+    <FrameLayout
+        android:id="@+id/container_fragment_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>

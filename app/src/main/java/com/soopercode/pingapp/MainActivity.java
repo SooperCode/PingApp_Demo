@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.soopercode.pingapp.help.HelpActivity;
+import com.soopercode.pingapp.listview.RecyclerFragment;
 import com.soopercode.pingapp.utils.HttpPinger;
 import com.soopercode.pingapp.utils.StupidUserException;
 import com.soopercode.pingapp.utils.Utility;
@@ -72,6 +76,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean("firstRun", false).apply();
         }
+
+        // add recycler view fragment
+        Fragment fragment = new RecyclerFragment();
+        addFragment(fragment);
+    }
+
+    private void addFragment(Fragment fragment){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container_fragment_recycler, fragment).commitAllowingStateLoss();
+        /* commitAllowingStateLoss() prevents app from crashing
+           with "IllegalStateException: Cannot perform this action
+           after onSaveInstanceState" -> http://stackoverflow.com/q/7575921  */
     }
 
 
@@ -326,24 +342,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult called");
+
         if(requestCode==CHANGE_SETTINGS_REQUEST){
-//            updateSettings();
+            // "refresh" recycler view fragment after user has changed
+            // the view settings & navigates back using phone's back button
+            addFragment(new RecyclerFragment());
         }
     }
 
-    /**
-     * Sets the watchlist to Nerd View or normal view according
-     * to the current configuration.
-     */
-//    private void updateSettings() {
-//        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        if(sharedPrefs.getBoolean("checkbox_nerdview", false)){
-//            pingListManager.createListView(true);
-//        }else{
-//            pingListManager.createListView(false);
-//        }
-//        pingListManager.pingListNow();
-//    }
 
 }
