@@ -1,11 +1,8 @@
 package com.soopercode.pingapp.listview;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +35,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     /* Create new views - invoked by recycler view's layout manager */
     @Override
     public RecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.wtf(TAG, "onCreateViewHolder()");
 
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 nerdViewOn? R.layout.cardview_nerd_layout : R.layout.cardview_layout,
@@ -53,14 +49,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     /* Replace the contents of a view (invoked by the layout manager) */
     @Override
     public void onBindViewHolder(RecyclerHolder holder, int position) {
-        Log.wtf(TAG, "onBindViewHolder()");
 
         // if last item is visible, create "padding" on the bottom
         // to enable scrolling the last item above the floating action button
-        holder.invisibleView.setVisibility(position == pingItems.size()-1 ?
-                                                View.INVISIBLE : View.GONE);
-
-        Log.wtf(TAG, "nerdview is: " + (nerdViewOn? "ON" : "OFF"));
+        holder.invisibleView.setVisibility(position == pingItems.size() - 1 ?
+                View.INVISIBLE : View.GONE);
 
         PingItem pingItem = pingItems.get(position);
         if(!nerdViewOn){

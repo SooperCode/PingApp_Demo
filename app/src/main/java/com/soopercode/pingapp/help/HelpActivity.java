@@ -72,20 +72,8 @@ public class HelpActivity extends AppCompatActivity{
             }
         });
 
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            /* not implemented */
-            @Override public void onPageScrolled(int position, float positionOffset,
-                                                 int positionOffsetPixels) {  }
-
-            // changes the action bar title to display the current page number
-            @Override
-            public void onPageSelected(int position) {
-                setTitle(String.format("Help \t %d/%d", position + 1, contents.size()));
-            }
-
-            /* not implemented */
-            @Override public void onPageScrollStateChanged(int state) { }
-        });
+        ViewPageIndicator indicator = (ViewPageIndicator)findViewById(R.id.viewpage_indicator);
+        indicator.setViewPager(viewPager);
     }
 
 }

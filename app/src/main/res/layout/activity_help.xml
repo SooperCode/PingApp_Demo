@@ -13,12 +13,20 @@
         android:elevation="8dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:background="?attr/colorPrimary"
-        app:navigationIcon="?attr/homeAsUpIndicator"
-        android:title="PingApp Help"/>
+        app:navigationIcon="?attr/homeAsUpIndicator"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager_help"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:paddingTop="7dp"
+        android:layout_weight="11"/>
+
+    <com.soopercode.pingapp.help.ViewPageIndicator
+        android:id="@+id/viewpage_indicator"
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>

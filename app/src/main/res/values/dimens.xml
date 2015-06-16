@@ -2,5 +2,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">10dp</dimen>
     <dimen name="activity_vertical_margin">10dp</dimen>
-    <!-- default was 16dp -->
+
+    <!-- ViewPageIndicator -->
+    <dimen name="viewpage_indicator_stroke_width">1dp</dimen>
+    <dimen name="viewpage_indicator_radius">4dp</dimen>
+
 </resources>
