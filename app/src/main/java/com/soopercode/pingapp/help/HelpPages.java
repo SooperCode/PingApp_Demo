@@ -1,6 +1,7 @@
 package com.soopercode.pingapp.help;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import com.soopercode.pingapp.R;
 
@@ -69,15 +70,23 @@ public class HelpPages {
     /**
      * Returns the HelpContent object representing the page with the specified ID
      *
-     * @param pageId    The individual help page's ID
+     * @param pageIndex    The individual help page's ID
      * @return          The HelpContent object representing the page with the given ID
      */
-    public HelpContent getPage(int pageId){
-        for(HelpContent page : contents){
-            if(page.personalId==pageId){
-                return page;
-            }
-        }
-        return null;
+    public HelpContent getPage(int pageIndex){
+        return contents.get(pageIndex);
+    }
+
+
+    /**
+     * Represents the contents for each help page.
+     *
+     * @author  Ria
+     */
+    public static class HelpContent {
+
+        String description;
+        Drawable image;
+
     }
 }

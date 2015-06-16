@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class HelpActivity extends AppCompatActivity{
 
-    private List<HelpContent> contents;
+    private List<HelpPages.HelpContent> contents;
 
     /**
      * Initializes the Help Screen of the App by setting up a
@@ -52,9 +52,17 @@ public class HelpActivity extends AppCompatActivity{
             // gets the specific help page from the right position in our array list
             @Override
             public Fragment getItem(int position) {
-                HelpContent onePage = contents.get(position);
-                // Fragment needs to know the page's ID -> attach it as Bundle
-                return HelpPageFragment.getNewHelpPageFragment(onePage.personalId);
+                // Fragment needs to know the page's index -> attach it as Bundle
+                Bundle args = new Bundle();
+                args.putInt(HelpPageFragment.HELP_PAGE_INDEX, position);
+                HelpPageFragment helpPageFragment = new HelpPageFragment();
+                helpPageFragment.setArguments(args);
+                /* why we pass the ID like that:
+                * when Fragment is recreated, no-arg constructor will be called,
+                * so need to pass our arguments with the setArguments() method
+                * instead of through constructor. */
+
+                return helpPageFragment;
             }
 
             // returns the number of items in our array list

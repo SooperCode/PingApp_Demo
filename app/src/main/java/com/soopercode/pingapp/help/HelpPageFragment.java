@@ -19,27 +19,8 @@ import com.soopercode.pingapp.R;
  */
 public class HelpPageFragment extends Fragment {
 
-    private static final String HELP_PAGE_ID = "com.soopercode.pingapp.page_id";
-    private HelpContent onePage;
-
-    /**
-     * Creates a new instance of this fragment, attaches the specified
-     * help page ID to it and returns this instance to the caller.
-     *
-     * @param pageId    The integer ID of the help page this fragment will hold
-     * @return          An instance of this class
-     */
-    public static HelpPageFragment getNewHelpPageFragment(int pageId){
-        Bundle passedData = new Bundle();
-        passedData.putInt(HELP_PAGE_ID, pageId);
-        HelpPageFragment helpPageFragment = new HelpPageFragment();
-        helpPageFragment.setArguments(passedData);
-        return helpPageFragment;
-            /* why we pass the ID like that:
-             * when Fragment is recreated, no-arg constructor will be called,
-             * so need to pass our arguments with the setArguments() method
-             * instead of through constructor. */
-    }
+    public static final String HELP_PAGE_INDEX = "helppage_index";
+    private HelpPages.HelpContent currentPage;
 
     /**
      * Initializes the state of this fragment.
@@ -53,8 +34,8 @@ public class HelpPageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int pageId = getArguments().getInt(HELP_PAGE_ID);
-        onePage = HelpPages.getInstance(getActivity()).getPage(pageId);
+        int pageIndex = getArguments().getInt(HELP_PAGE_INDEX);
+        currentPage = HelpPages.getInstance(getActivity()).getPage(pageIndex);
     }
 
     /**
@@ -77,8 +58,8 @@ public class HelpPageFragment extends Fragment {
         ImageView imageView = (ImageView) view.findViewById(R.id.helpFrag_img);
         descriptionText.setPadding(25, 20, 25, 0);
         //set the text & image for this page
-        descriptionText.setText(Html.fromHtml(onePage.description));
-        imageView.setImageDrawable(onePage.image);
+        descriptionText.setText(Html.fromHtml(currentPage.description));
+        imageView.setImageDrawable(currentPage.image);
 
         return view;
     }
