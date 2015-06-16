@@ -54,7 +54,7 @@ public class ViewPageIndicator extends View implements ViewPager.OnPageChangeLis
 
         final float spaceByRadius = radius * 5;
         final float heightOffset = heightPaddingTop + radius;
-        float widthOffset = widthPaddingLeft + radius*2;
+        float widthOffset = widthPaddingLeft + radius*2.5f;
         widthOffset += ((widthSize - widthPaddingLeft - widthPaddingRight) / 2.0f)
                 - ((pageCount * spaceByRadius) / 2.0f);
 
