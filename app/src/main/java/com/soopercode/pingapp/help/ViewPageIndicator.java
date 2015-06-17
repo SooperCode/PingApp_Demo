@@ -89,64 +89,6 @@ public class ViewPageIndicator extends View implements ViewPager.OnPageChangeLis
 
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
-        setMeasuredDimension(measureWidth(widthMeasureSpec),
-                measureHeight(heightMeasureSpec));
-    }
-
-    /**
-     * Determines the width of this view
-     *
-     * @param measureSpec   A measureSpec packed into an int
-     * @return  The width of the view, honoring contraints from measureSpec
-     */
-    private int measureWidth(int measureSpec){
-        int result;
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-
-        if((specMode == MeasureSpec.EXACTLY) || viewPager == null){
-            // We were told how big to be
-            result = specSize;
-        }else{
-            // Calculate the width according to the view count
-            final int count = viewPager.getAdapter().getCount();
-            result = (int)(getPaddingLeft() + getPaddingRight()
-                    + (count * 2*radius) + (count-1)*radius + 1);
-            // Respect AT_MOST value if that was what is called for by measureSpec
-            if(specMode == MeasureSpec.AT_MOST){
-                result = Math.min(result, specSize);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Determines the height of this view.
-     *
-     * @param measureSpec   A measureSpec packed into an int
-     * @return  The height of the view, honoring constraints from measureSpec
-     */
-    private int measureHeight(int measureSpec){
-        int result;
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-
-        if(specMode == MeasureSpec.EXACTLY){
-            // We were told how big to be
-            result = specSize;
-        }else{
-            // Measure the height
-            result = (int)(2*radius + getPaddingTop() + getPaddingBottom() + 1);
-            // Respect AT_MOST value if that was what is called for by measureSpec
-            if(specMode == MeasureSpec.AT_MOST){
-                result = Math.min(result, specSize);
-            }
-        }
-        return result;
-
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
