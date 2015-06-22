@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,6 +41,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
     private List<PingItem> pingList;
     private Activity activity;
     private boolean nerdViewOn;
+    private SwipeRefreshLayout refreshLayout;
 
     // FOR TESTING:
     private static final String[] dummyHosts = {
@@ -76,6 +79,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
         // check for nerd view
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
         nerdViewOn = sharedPrefs.getBoolean("checkbox_nerdview", false);
+
     }
 
     @Nullable
@@ -89,7 +93,27 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
         pingListRecycler.setLayoutManager(new LinearLayoutManager(activity));
         pingListRecycler.setAdapter(recyclerAdapter);
 
+        refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh(){
+                Toast.makeText(activity, "refreshed!", Toast.LENGTH_SHORT).show();
+                //TODO: refresh list. ...and eventually build in iOS-overscroll effect!
+                refresh();
+            }
+        });
+        refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.primary_dark));
+
         return view;
+    }
+
+    private void refresh(){
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                refreshLayout.setRefreshing(false);
+            }
+        }, 2000);
     }
 
 
