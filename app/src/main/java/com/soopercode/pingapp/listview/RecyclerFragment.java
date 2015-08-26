@@ -2,16 +2,21 @@ package com.soopercode.pingapp.listview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -22,16 +27,20 @@ import com.soopercode.pingapp.R;
 import com.soopercode.pingapp.background.BackgroundPingManager;
 import com.soopercode.pingapp.utils.Utility;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by ria on 6/15/15.
  */
-public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
+public class RecyclerFragment extends Fragment implements OnAsyncCompleted, RecyclerItemClickListener.OnCardClickListener{
 
     private static final String TAG = RecyclerFragment.class.getSimpleName();
 
@@ -41,7 +50,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
     private boolean nerdViewOn;
 
     // FOR TESTING:
-    private static final String[] dummyHosts = {
+    private static final String[] DUMMY_HOSTS = {
             "www.google.de",
             "www.google.nl",
             "www.somewebsite.com",
@@ -70,12 +79,31 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        // initialize ping list
-        pingList = new ArrayList<>();
-        loadList();
+        // ***** FOR TESTING - FILL UP LIST. ************
+        PrintWriter printer = null;
+        try{
+            OutputStream out = activity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE);
+            printer = new PrintWriter(out);
+            for(String host : DUMMY_HOSTS){
+                printer.println(host);
+            }
+            printer.flush();
+            Log.d(TAG, "written mock list to file");
+        }catch (IOException ioe){
+            Log.e(TAG, "writing mock host list failed");
+        }finally{
+            if (printer != null) {
+                printer.close();
+            }
+        }
+        // *************************************
+
+        setHasOptionsMenu(true);
+
         // check for nerd view
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
         nerdViewOn = sharedPrefs.getBoolean("checkbox_nerdview", false);
+
     }
 
     @Nullable
@@ -83,57 +111,59 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_recyclerview, container, false);
 
+        pingList = new ArrayList<>();
         recyclerAdapter = new RecyclerAdapter(activity, pingList, nerdViewOn);
         RecyclerView pingListRecycler = (RecyclerView) view.findViewById(R.id.recyclerview_pinglist);
         pingListRecycler.setHasFixedSize(true);
         pingListRecycler.setLayoutManager(new LinearLayoutManager(activity));
         pingListRecycler.setAdapter(recyclerAdapter);
+        pingListRecycler.addOnItemTouchListener(new RecyclerItemClickListener(activity, pingListRecycler, this));
+
+        loadList();
 
         return view;
     }
 
 
     private void loadList(){
-        // FOR TESTING - TO FILL UP LIST.
-        for(String host : dummyHosts){
-            addHostToList(host);
-        }
-//        recyclerAdapter.notifyDataSetChanged();
 
-//        InputStream in = null;
-//        try{
-//            in = context.openFileInput(MainActivity.FILENAME);
-//            if(in !=null) {
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//                String hostname;
-//                while ((hostname = reader.readLine()) != null) {
-//                    addHostToList(hostname);
-//                }
-//                pingListAdapter.notifyDataSetChanged();
-//            }
-//        }catch(IOException ioe){
-//            Log.e(TAG, "PLM: loading list from file failed " + ioe.toString());
-//        }finally{
-//            //if file was empty or not found, set list status empty:
-//            if(pingList.isEmpty()){
-//                PrefsManager.setPingListEmpty(context, true);
-//            }
-//            if(in != null){
-//                try { in.close(); } catch (IOException ioe) { ioe.printStackTrace(); }
-//            }
-//        }
+        InputStream in = null;
+        try{
+            in = activity.openFileInput(MainActivity.FILENAME);
+            if(in !=null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                String hostname;
+                while ((hostname = reader.readLine()) != null) {
+                    addHostToList(hostname, false);
+                }
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        }catch(IOException ioe){
+            Log.e(TAG, "loadList(): loading list from file failed " + ioe.toString());
+        }finally{
+            //if file was empty or not found, set list status empty:
+            if(pingList.isEmpty()){
+                Log.d(TAG, "loadList(): host list is empty");
+                PrefsManager.setPingListEmpty(activity, true);
+            }
+            if(in != null){
+                try { in.close(); } catch (IOException ioe) { ioe.printStackTrace(); }
+            }
+        }
     }
 
-    private void addHostToList(String validatedHostname){
+    private void addHostToList(String validatedHostname, boolean saveList){
         // if this is the first host in the list, set list status from empty to not-empty:
         if(pingList.isEmpty()){
+            Log.d(TAG, "addHostToList() - host list is empty");
             PrefsManager.setPingListEmpty(activity, false);
         }
         // make new Ping-Item, add to list, save list to file, ping host
         PingItem host = new PingItem(validatedHostname);
         pingList.add(host);
-//        recyclerAdapter.notifyDataSetChanged();
-        //saveList();
+        if(saveList){
+            saveList();
+        }
         pingHostFromList(host);
     }
 
@@ -146,6 +176,67 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
             Toast.makeText(activity, getString(R.string.offline_toast),
                     Toast.LENGTH_SHORT).show();
         }
+        recyclerAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Writes the hostname of each item currently contained in our
+     * {@code ArrayList} to a local file.
+     */
+    private void saveList(){
+        OutputStreamWriter out = null;
+        try{
+            out = new OutputStreamWriter(activity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE));
+            for(int i=0; i<pingList.size(); i++){
+                out.write(pingList.get(i).getHostname() + "\n");
+            }
+        }catch(IOException ioe){
+            Log.e(TAG, "PLM: writing to file failed", ioe);
+        }finally{
+            if(out !=null){
+                try{ out.close(); }catch(IOException ioe){ ioe.printStackTrace(); }
+            }
+        }
+    }
+
+    /**
+     * Called whenever the user has deleted all hosts from the watchlist.
+     * Clears all items from our {@code ArrayList}, deletes the local file
+     * containing the hostnames and makes sure all background pinging is stopped.
+     */
+    public void clearList(){
+        if(!pingList.isEmpty()){
+            pingList.clear();
+        }
+        PrefsManager.setPingListEmpty(activity, true);
+
+        //tell BGPManager to deactivate bg-pinging if it's active.
+        Intent intent = new Intent(activity, BackgroundPingManager.class);
+        intent.putExtra("switchOn", 2); //2 = turn it off
+        activity.sendBroadcast(intent);
+
+        //delete file
+        activity.deleteFile(MainActivity.FILENAME);
+        recyclerAdapter.notifyDataSetChanged();
+    }
+
+    private void showClearListDialog(){
+        AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setMessage("Clear all hosts from the list?");
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                clearList();
+                dialog.dismiss();
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     @Override
@@ -153,88 +244,68 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
         recyclerAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.menu_deleteList:
+                showClearListDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+    }
+
+    /************ ON CARD CLICK *************/
+
+    @Override
+    public void onItemClick(final View view, final int position) {
+        // NOT IMPLEMENTED.
+        // PINGING SINGLE HOST DOESN'T REALLY MAKE SENSE,
+        // SINCE THE WHOLE LIST IS UPDATED ANYWAY.
+//        pingHostFromList(pingList.get(position));
+    }
+
+    @Override
+    public void onCardLongClick(final View view, final int position) {
+        new AlertDialog.Builder(activity)
+                .setTitle("Confirm")
+                .setMessage("Delete '" + pingList.get(position).getHostname() + "'?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        pingList.remove(position);
+                        if(pingList.isEmpty()){
+                            clearList();
+                        }else{
+                            recyclerAdapter.notifyDataSetChanged();
+                            saveList();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setCancelable(true)
+                .show();
+
+    }
+
 
     /***************** STUFF LEFT OVER FROM PingListManager ************************/
 
-//
-////    @Override
-////    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////        pingHostFromList(pingList.get(position));
-////    }
-//
-//
-////    @Override
-////    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-////        new AlertDialog.Builder(context)
-////                .setTitle("Confirm")
-////                .setMessage("Delete '" + pingList.get(position).getHostname() + "'?")
-////                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-////                    @Override
-////                    public void onClick(DialogInterface dialog, int which) {
-////                        pingList.remove(position);
-////                        if(pingList.isEmpty()){
-////                            clearList();
-////                        }else{
-////                            recyclerAdapter.notifyDataSetChanged();
-////                            saveList();
-////                        }
-////                    }
-////                })
-////                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-////                    @Override
-////                    public void onClick(DialogInterface dialog, int which) {
-////                        dialog.cancel();
-////                    }
-////                })
-////                .setCancelable(true)
-////                .show();
-////        return true;
-////    }
-//
-//
-//
-//    /**
-//     * Writes the hostname of each item currently contained in our
-//     * {@code ArrayList} to a local file.
-//     */
-//    private void saveList(){
-//        OutputStreamWriter out = null;
-//        try{
-//            out = new OutputStreamWriter(mainActivity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE));
-//            for(int i=0; i<pingList.size(); i++){
-//                out.write(pingList.get(i).getHostname() + "\n");
-//            }
-//        }catch(IOException ioe){
-//            Log.e(TAG, "PLM: writing to file failed", ioe);
-//        }finally{
-//            if(out !=null){
-//                try{ out.close(); }catch(IOException ioe){ ioe.printStackTrace(); }
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Called whenever the user has deleted all hosts from the watchlist.
-//     * Clears all items from our {@code ArrayList}, deletes the local file
-//     * containing the hostnames and makes sure all background pinging is stopped.
-//     */
-//    public void clearList(){
-//        if(!pingList.isEmpty()){
-//            pingList.clear();
-//        }
-//        PrefsManager.setPingListEmpty(mainActivity.getApplicationContext(), true);
-//
-//        //tell BGPManager to deactivate bg-pinging if it's active.
-//        Intent intent = new Intent(mainActivity, BackgroundPingManager.class);
-//        intent.putExtra("switchOn", 2); //2 = turn it off
-//        mainActivity.sendBroadcast(intent);
-//        //turn off light
-////        ImageView light = (ImageView)context.findViewById(R.id.imgWatchlistOn);
-////        light.setImageDrawable(context.getResources().getDrawable(R.drawable.off_30x30));
-////        pingListAdapter.notifyDataSetChanged();
-//        //delete file
-//        mainActivity.deleteFile(MainActivity.FILENAME);
-//    }
+
+
 //
 //    /**
 //     * Checks if the specified hostname is already contained in our {@code ArrayList}
@@ -254,23 +325,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted{
 //    }
 //
 //
-//
-//    /**
-//     * Causes the specified item in the watchlist to be pinged
-//     * using {@link AsyncListPing}
-//     *
-//     * @param item  The {@link PingItem} representing the host to be pinged
-//     */
-//    private void pingHostFromList(PingItem item){
-//
-//        if(Utility.gotConnection(mainActivity.getApplicationContext())){
-//            AsyncListPing asyncPinger = new AsyncListPing(this);
-//            asyncPinger.execute(item);
-//        }else{
-//            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast),
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
+
 //
 //    /**
 //     * Causes all hosts in the watchlist to be pinged
