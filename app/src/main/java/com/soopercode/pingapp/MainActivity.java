@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int CHANGE_SETTINGS_REQUEST = 1;
     private static int dummyCounter = 0;
 
+    private AppBarLayout appBarLayout;
     private EditText usersHost;
     private TextView prompt;
     private ImageView onOfLight;
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appBarLayout = (AppBarLayout)findViewById(R.id.appbar_layout);
 
         // initialize toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -101,15 +102,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * user. [SDK quote]
      * Checks 'dummyCounter' status and sets prompt-text back to normal if necessary.
      */
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        appBarLayout.addOnOffsetChangedListener(this);
 //        if(dummyCounter !=0){
 //            prompt.setTextAppearance(this, R.style.defaultStyle);
 //            prompt.setText(R.string.promptDisplay);
 //            dummyCounter = 0;
 //        }
-//    }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        appBarLayout.removeOnOffsetChangedListener(this);
+    }
 
     /**
      * Called after {@link #onRestoreInstanceState}, {@link #onRestart}, or
