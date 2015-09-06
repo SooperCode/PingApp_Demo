@@ -300,11 +300,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
 
-            case R.id.menu_deleteList:
-//                pingListManager.clearList();
-                onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.off_30x30));
-                return true;
-
             case R.id.menu_settings:
                 Intent prefsIntent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(prefsIntent, CHANGE_SETTINGS_REQUEST);

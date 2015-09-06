@@ -39,7 +39,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 nerdViewOn? R.layout.cardview_nerd_layout : R.layout.cardview_layout,
                 parent, false);
-        // TODO: refactor into just one cardview layout...(?)
+    //    view.setOnClickListener(new OnCardClickListener(this));
 
         recyclerView = (RecyclerView)parent;
 

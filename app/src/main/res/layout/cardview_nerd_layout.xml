@@ -15,7 +15,8 @@
         card_view:cardElevation="2dp"
         card_view:contentPaddingLeft="5dp"
         card_view:contentPaddingRight="5dp">
-        <!-- android:layout_gravity="center" -->
+        <!-- android:layout_gravity="center"
+         -->
 
         <LinearLayout
             android:layout_width="match_parent"
