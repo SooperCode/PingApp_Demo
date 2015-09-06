@@ -229,18 +229,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /* **************** SWIPE TO REFRESH FIX ************************* */
+    /* need this because we have a Collapsing Toolbar
+    *  and only want to refresh if Toolbar is fully expanded. */
 
     private int index;
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int index){
-        Log.w(TAG, "onOffsetChanged(index: " + index + ")");
+        Log.d(TAG, "onOffsetChanged(index: " + index + ")");
         this.index = index;
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev){
-        Log.w(TAG, "dispatchTouchEvent() index is " + index);
+        Log.d(TAG, "dispatchTouchEvent() index is " + index);
         int action = MotionEventCompat.getActionMasked(ev);
         switch(action){
             case MotionEvent.ACTION_DOWN:
@@ -248,11 +250,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case MotionEvent.ACTION_CANCEL:
                 RecyclerFragment fragment = (RecyclerFragment)getSupportFragmentManager()
                         .findFragmentByTag(RECYCLER_FRAGMENT_TAG);
-                if(index == 0){
-                    fragment.setSwipeToRefreshEnabled(true);
-                }else{
-                    fragment.setSwipeToRefreshEnabled(false);
-                }
+                fragment.setSwipeToRefreshEnabled(index == 0);
+                    // index==0 means toolbar is expanded.
                 break;
         }
         return super.dispatchTouchEvent(ev);

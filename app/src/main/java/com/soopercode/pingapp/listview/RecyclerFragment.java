@@ -130,7 +130,8 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
             public void onRefresh(){
                 Toast.makeText(activity, "refreshed!", Toast.LENGTH_SHORT).show();
                 //TODO: refresh list. ...and eventually build in iOS-overscroll effect!
-                refresh();
+                //refresh();
+                refreshPingList();
             }
         });
         refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.primary_dark));
@@ -138,13 +139,28 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
         return view;
     }
 
-    private void refresh(){
-        new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                refreshLayout.setRefreshing(false);
-            }
-        }, 2000);
+//    private void refresh(){
+//        new Handler().postDelayed(new Runnable(){
+//            @Override
+//            public void run(){
+//                refreshLayout.setRefreshing(false);
+//            }
+//        }, 2000);
+//    }
+
+        /**
+     * Causes all hosts in the watchlist to be pinged
+     * using {@link AsyncListPing}.
+     */
+    public void refreshPingList(){
+
+        if(Utility.gotConnection(activity)){
+            AsyncListPing asyncPinger = new AsyncListPing(this);
+            asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
+        }else{
+            Toast.makeText(activity, getString(R.string.offline_toast),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setSwipeToRefreshEnabled(boolean enabled){
@@ -270,6 +286,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
     @Override
     public void onAsyncPingCompleted(){
         recyclerAdapter.notifyDataSetChanged();
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -354,19 +371,5 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
 //
 //
 
-//
-//    /**
-//     * Causes all hosts in the watchlist to be pinged
-//     * using {@link AsyncListPing}.
-//     */
-//    public void pingListNow(){
-//
-//        if(Utility.gotConnection(mainActivity.getApplicationContext())){
-//            AsyncListPing asyncPinger = new AsyncListPing(this);
-//            asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
-//        }else{
-//            Toast.makeText(mainActivity, mainActivity.getString(R.string.offline_toast),
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
+
 }
