@@ -147,6 +147,11 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
         }, 2000);
     }
 
+    public void setSwipeToRefreshEnabled(boolean enabled){
+        Log.w(TAG, "setSwipeToRefreshEnabled(" + enabled + ")");
+        refreshLayout.setEnabled(enabled);
+    }
+
 
     private void loadList(){
 

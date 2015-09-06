@@ -6,12 +6,16 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,13 +34,14 @@ import com.soopercode.pingapp.utils.Utility;
  * @author  Ria
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener{
 
     /** name of the local file containing the hosts in the watchlist. */
     public static final String FILENAME = "pingapp";
 
     /** Log tag for testing & debugging */
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String RECYCLER_FRAGMENT_TAG = "RF_TAG";
 
     private static final int CHANGE_SETTINGS_REQUEST = 1;
     private static int dummyCounter = 0;
@@ -82,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void addFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container_fragment_recycler, fragment).commitAllowingStateLoss();
+                .replace(R.id.container_fragment_recycler, fragment, RECYCLER_FRAGMENT_TAG)
+                .commitAllowingStateLoss();
         /* commitAllowingStateLoss() prevents app from crashing
            with "IllegalStateException: Cannot perform this action
            after onSaveInstanceState" -> http://stackoverflow.com/q/7575921  */
@@ -214,6 +220,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /* **************** SWIPE TO REFRESH FIX ************************* */
+
+    private int index;
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int index){
+        Log.w(TAG, "onOffsetChanged(index: " + index + ")");
+        this.index = index;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev){
+        Log.w(TAG, "dispatchTouchEvent() index is " + index);
+        int action = MotionEventCompat.getActionMasked(ev);
+        switch(action){
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                RecyclerFragment fragment = (RecyclerFragment)getSupportFragmentManager()
+                        .findFragmentByTag(RECYCLER_FRAGMENT_TAG);
+                if(index == 0){
+                    fragment.setSwipeToRefreshEnabled(true);
+                }else{
+                    fragment.setSwipeToRefreshEnabled(false);
+                }
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
     /**
      * AsyncTask that handles all operations necessary for

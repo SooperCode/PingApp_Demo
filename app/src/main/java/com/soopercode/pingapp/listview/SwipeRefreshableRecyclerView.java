@@ -22,18 +22,18 @@ public class SwipeRefreshableRecyclerView extends RecyclerView{
         super(context, attrs, defStyle);
     }
 
-    @Override
-    public boolean canScrollVertically(int direction){
-        Log.wtf("TAG", "canScrollVertically original: " + super.canScrollVertically(direction));
-        // check if scrolling up
-        if(direction < 1){
-            Log.w("TAG", "direction = " + direction);
-            boolean original = super.canScrollVertically(direction);
-            Log.w("TAG", "getChildAt(0): " + getChildAt(0));
-            Log.w("TAG", "getChildAt(0).getTop(): " + getChildAt(0).getTop());
-            Log.wtf("tag", "returning: " + (!original && getChildAt(0) != null && getChildAt(0).getTop() < 0 || original));
-            return !original && getChildAt(0) != null && getChildAt(0).getTop() < 0 || original;
-        }
-        return super.canScrollVertically(direction);
-    }
+//    @Override
+//    public boolean canScrollVertically(int direction){
+//        Log.wtf("TAG", "canScrollVertically original: " + super.canScrollVertically(direction));
+//        // check if scrolling up
+//        if(direction < 1){
+//            Log.w("TAG", "direction = " + direction);
+//            boolean original = super.canScrollVertically(direction);
+//            Log.w("TAG", "getChildAt(0): " + getChildAt(0));
+//            Log.w("TAG", "getChildAt(0).getTop(): " + getChildAt(0).getTop());
+//            Log.wtf("tag", "returning: " + (!original && getChildAt(0) != null && getChildAt(0).getTop() < 0 || original));
+//            return !original && getChildAt(0) != null && getChildAt(0).getTop() < 0 || original;
+//        }
+//        return super.canScrollVertically(direction);
+//    }
 }
