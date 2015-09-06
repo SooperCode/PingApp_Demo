@@ -8,13 +8,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,7 +31,7 @@ import com.soopercode.pingapp.utils.Utility;
  * @author  Ria
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     /** name of the local file containing the hosts in the watchlist. */
     public static final String FILENAME = "pingapp";
@@ -105,7 +103,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        appBarLayout.addOnOffsetChangedListener(this);
+        appBarLayout.addOnOffsetChangedListener((RecyclerFragment)getSupportFragmentManager()
+                .findFragmentByTag(RECYCLER_FRAGMENT_TAG));
 //        if(dummyCounter !=0){
 //            prompt.setTextAppearance(this, R.style.defaultStyle);
 //            prompt.setText(R.string.promptDisplay);
@@ -116,7 +115,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        appBarLayout.removeOnOffsetChangedListener(this);
+        appBarLayout.removeOnOffsetChangedListener((RecyclerFragment)getSupportFragmentManager()
+                .findFragmentByTag(RECYCLER_FRAGMENT_TAG));
     }
 
     /**
@@ -228,34 +228,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /* **************** SWIPE TO REFRESH FIX ************************* */
-    /* need this because we have a Collapsing Toolbar
-    *  and only want to refresh if Toolbar is fully expanded. */
-
-    private int index;
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int index){
-        Log.d(TAG, "onOffsetChanged(index: " + index + ")");
-        this.index = index;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev){
-        Log.d(TAG, "dispatchTouchEvent() index is " + index);
-        int action = MotionEventCompat.getActionMasked(ev);
-        switch(action){
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                RecyclerFragment fragment = (RecyclerFragment)getSupportFragmentManager()
-                        .findFragmentByTag(RECYCLER_FRAGMENT_TAG);
-                fragment.setSwipeToRefreshEnabled(index == 0);
-                    // index==0 means toolbar is expanded.
-                break;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
 
     /**
      * AsyncTask that handles all operations necessary for

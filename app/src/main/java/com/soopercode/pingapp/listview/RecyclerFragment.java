@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -42,7 +43,9 @@ import java.util.List;
 /**
  * Created by ria on 6/15/15.
  */
-public class RecyclerFragment extends Fragment implements OnAsyncCompleted, RecyclerItemClickListener.OnCardClickListener{
+public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
+        RecyclerItemClickListener.OnCardClickListener,
+        AppBarLayout.OnOffsetChangedListener{
 
     private static final String TAG = RecyclerFragment.class.getSimpleName();
 
@@ -128,25 +131,15 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh(){
-                Toast.makeText(activity, "refreshed!", Toast.LENGTH_SHORT).show();
-                //TODO: refresh list. ...and eventually build in iOS-overscroll effect!
-                //refresh();
+                //TODO: eventually build in iOS-overscroll effect!
                 refreshPingList();
             }
         });
         refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.primary_dark));
+        refreshLayout.setEnabled(false);
 
         return view;
     }
-
-//    private void refresh(){
-//        new Handler().postDelayed(new Runnable(){
-//            @Override
-//            public void run(){
-//                refreshLayout.setRefreshing(false);
-//            }
-//        }, 2000);
-//    }
 
         /**
      * Causes all hosts in the watchlist to be pinged
@@ -162,12 +155,6 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
                     Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void setSwipeToRefreshEnabled(boolean enabled){
-        Log.w(TAG, "setSwipeToRefreshEnabled(" + enabled + ")");
-        refreshLayout.setEnabled(enabled);
-    }
-
 
     private void loadList(){
 
@@ -344,6 +331,15 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted, Recy
                 .setCancelable(true)
                 .show();
 
+    }
+
+    /*
+    *  need this because we have a Collapsing Toolbar
+    *  and only want to refresh if Toolbar is fully expanded. */
+    @Override
+    public void onOffsetChanged(final AppBarLayout pAppBarLayout, final int index) {
+        Log.w(TAG, "onOffsetChanged(index==" + index + ")");
+        refreshLayout.setEnabled(index == 0);
     }
 
 
