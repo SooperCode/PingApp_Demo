@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,15 +30,19 @@ import com.soopercode.pingapp.utils.Utility;
  * Represents the Main Screen of this Application.
  * Started every time the User opens or navigates back to this App.
  *
- * @author  Ria
+ * @author Ria
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    /** name of the local file containing the hosts in the watchlist. */
+    /**
+     * name of the local file containing the hosts in the watchlist.
+     */
     public static final String FILENAME = "pingapp";
 
-    /** Log tag for testing & debugging */
+    /**
+     * Log tag for testing & debugging
+     */
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String RECYCLER_FRAGMENT_TAG = "RF_TAG";
 
@@ -53,38 +59,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Initializes and sets up the App's Main Screen.
      * Called every time the App is started.
      *
-     * @param savedInstanceState    If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.
-     *     Otherwise it is null. [SDK quote]
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in {@link #onSaveInstanceState}.
+     *                           Otherwise it is null. [SDK quote]
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        appBarLayout = (AppBarLayout)findViewById(R.id.appbar_layout);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
 
         // initialize toolbar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
+
+        // this prevents the title (app name) from showing up on top of the image
+        // for some strange android reason this doesn't work in xml.
+        ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar))
+                .setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         // after installation of the app, set example host in the list:
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isFirstRun = sharedPrefs.getBoolean("firstRun", true);
-        if(isFirstRun){
+        if (isFirstRun) {
             //TODO: .addNewHost("www.google.com");
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean("firstRun", false).apply();
         }
 
         // add recycler view fragment
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             addFragment(new RecyclerFragment());
         }
     }
 
-    private void addFragment(Fragment fragment){
+    private void addFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container_fragment_recycler, fragment, RECYCLER_FRAGMENT_TAG)
                 .commitAllowingStateLoss();
@@ -103,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        appBarLayout.addOnOffsetChangedListener((RecyclerFragment)getSupportFragmentManager()
+        appBarLayout.addOnOffsetChangedListener((RecyclerFragment) getSupportFragmentManager()
                 .findFragmentByTag(RECYCLER_FRAGMENT_TAG));
 //        if(dummyCounter !=0){
 //            prompt.setTextAppearance(this, R.style.defaultStyle);
@@ -115,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        appBarLayout.removeOnOffsetChangedListener((RecyclerFragment)getSupportFragmentManager()
+        appBarLayout.removeOnOffsetChangedListener((RecyclerFragment) getSupportFragmentManager()
                 .findFragmentByTag(RECYCLER_FRAGMENT_TAG));
     }
 
@@ -140,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Called every time a View on the MainScreen is clicked
      * and responds as defined.
      *
-     * @param view      The View that has been clicked
+     * @param view The View that has been clicked
      */
     @Override
     public void onClick(View view) {
@@ -193,32 +204,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Verifies whether the text entered by the user constitutes a valid URL,
      * returns true if it does, or alerts the user if it does not.
      *
-     * @param hostname      The text entered by the user
-     * @return              true if a valid URL has been obtained
+     * @param hostname The text entered by the user
+     * @return true if a valid URL has been obtained
      */
-    private boolean validateHostname(String hostname){
-        try{
+    private boolean validateHostname(String hostname) {
+        try {
             validatedHost = Utility.validateHostname(hostname);
             usersHost.setText(validatedHost);
             //check the dummy-state:
-            if(dummyCounter !=0){
+            if (dummyCounter != 0) {
                 prompt.setTextAppearance(this, R.style.defaultStyle);
                 prompt.setText(R.string.promptDisplay);
                 dummyCounter = 0;
             }
             return true;
-        }catch (StupidUserException sue){
-            switch (dummyCounter){
-                case 0: prompt.setText("Oops! Try again...");
-                    dummyCounter++; break;
-                case 1: prompt.setText("Come on, it can't be that hard!");
-                    dummyCounter++; break;
-                case 2: prompt.setText("uhm... you sure you wanna do this??");
-                    dummyCounter++; break;
-                case 3: prompt.setText("Urrgh, I give up!");
+        } catch (StupidUserException sue) {
+            switch (dummyCounter) {
+                case 0:
+                    prompt.setText("Oops! Try again...");
+                    dummyCounter++;
+                    break;
+                case 1:
+                    prompt.setText("Come on, it can't be that hard!");
+                    dummyCounter++;
+                    break;
+                case 2:
+                    prompt.setText("uhm... you sure you wanna do this??");
+                    dummyCounter++;
+                    break;
+                case 3:
+                    prompt.setText("Urrgh, I give up!");
                     //dummyCounter = 0; break;
-                    dummyCounter++; break;
-                default: prompt.setText(getString(R.string.promptDisplay));
+                    dummyCounter++;
+                    break;
+                default:
+                    prompt.setText(getString(R.string.promptDisplay));
                     dummyCounter = 0;
             }
             prompt.setTextAppearance(this, R.style.negativeStyle);
@@ -234,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * pinging the host in the text field, including
      * operations that run on a background thread.
      *
-     * @author  Ria
+     * @author Ria
      */
     private class QuickPing extends AsyncTask<String, Void, Bundle> {
 
@@ -257,9 +277,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * when MainActivity starts this task. In this case it will always
          * be a single {@code String} representing the URL to be pinged.
          *
-         * @param hostnames     The URL to be pinged
-         * @return              A Bundle containing response code
-         *                      and response message
+         * @param hostnames The URL to be pinged
+         * @return A Bundle containing response code
+         * and response message
          */
         @Override
         protected Bundle doInBackground(String... hostnames) {
@@ -275,11 +295,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * Starts {@link DisplayResponseActivity}, passing it the {@code Bundle}
          * containing response code and response message.
          *
-         * @param response      A Bundle containing response code and response message
+         * @param response A Bundle containing response code and response message
          */
         @Override
         protected void onPostExecute(Bundle response) {
-            if(progressDialog.isShowing()){
+            if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
             Intent displayResponse = new Intent(MainActivity.this, DisplayResponseActivity.class);
@@ -293,8 +313,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Initializes the contents of this Activity's options menu.
      *
-     * @param menu      The options menu
-     * @return          true to make the menu visible
+     * @param menu The options menu
+     * @return true to make the menu visible
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -306,13 +326,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Called whenever a menu item is selected and processes
      * the request as defined.
      *
-     * @param item      The menu item that was selected
-     * @return          true to signal that request has been consumed and
-     *                  no further processing is necessary
+     * @param item The menu item that was selected
+     * @return true to signal that request has been consumed and
+     * no further processing is necessary
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.menu_settings:
                 Intent prefsIntent = new Intent(this, SettingsActivity.class);
@@ -339,18 +359,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * {@link #startActivityForResult}.
      * Handles changes that were made to the Nerd View Preference.
      *
-     * @param requestCode   The integer request code supplied when SettingsActivity
-     *                      was started using {@link #startActivityForResult}
-     * @param resultCode    The integer result code returned by the child activity
-     *                      through its setResult() [SDK quote]
-     *                      (not used in this code)
-     * @param data          An Intent, which can return result data to the caller [SDK quote]
-     *                      (not used in this code)
+     * @param requestCode The integer request code supplied when SettingsActivity
+     *                    was started using {@link #startActivityForResult}
+     * @param resultCode  The integer result code returned by the child activity
+     *                    through its setResult() [SDK quote]
+     *                    (not used in this code)
+     * @param data        An Intent, which can return result data to the caller [SDK quote]
+     *                    (not used in this code)
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode==CHANGE_SETTINGS_REQUEST){
+        if (requestCode == CHANGE_SETTINGS_REQUEST) {
             // "refresh" recycler view fragment after user has changed
             // the view settings & navigates back using phone's back button
             addFragment(new RecyclerFragment());

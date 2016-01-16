@@ -11,15 +11,10 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:paddingTop="50dp"
-         >
-        <!-- removed android:fitsSystemWindows="true"
-            & added padding because menu button wasn't showing.
-        this issue is known bug:
-        Issue 175069:	CoordinatorLayout fitsSystemWindows behavior on API 21
-        https://code.google.com/p/android/issues/detail?id=175069
-        -->
+        android:layout_height="142dp">
+        <!-- No android:fitsSystemWindows="true" here
+            because else the status bar is on top of & covers
+            the upper part of the image (API 21+). -->
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
@@ -27,10 +22,10 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginBottom="32dp"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed" >
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleMarginBottom="53dp">
+            <!-- for some strange android reason the bottom margin can't be more than 53dp,
+                else the title doesn't show up at all anymore. -->
 
             <ImageView
                 android:id="@+id/header"

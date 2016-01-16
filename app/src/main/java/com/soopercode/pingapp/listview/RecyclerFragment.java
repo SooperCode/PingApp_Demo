@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -45,7 +44,7 @@ import java.util.List;
  */
 public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         RecyclerItemClickListener.OnCardClickListener,
-        AppBarLayout.OnOffsetChangedListener{
+        AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = RecyclerFragment.class.getSimpleName();
 
@@ -76,28 +75,28 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
 
     @Override
-    public void onAttach(Activity activity){
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // ***** FOR TESTING - FILL UP LIST. ************
         PrintWriter printer = null;
-        try{
+        try {
             OutputStream out = activity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE);
             printer = new PrintWriter(out);
-            for(String host : DUMMY_HOSTS){
+            for (String host : DUMMY_HOSTS) {
                 printer.println(host);
             }
             printer.flush();
             Log.d(TAG, "written mock list to file");
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             Log.e(TAG, "writing mock host list failed");
-        }finally{
+        } finally {
             if (printer != null) {
                 printer.close();
             }
@@ -114,7 +113,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recyclerview, container, false);
 
         pingList = new ArrayList<>();
@@ -127,10 +126,10 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
         loadList();
 
-        refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh(){
+            public void onRefresh() {
                 //TODO: eventually build in iOS-overscroll effect!
                 refreshPingList();
             }
@@ -141,27 +140,27 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         return view;
     }
 
-        /**
+    /**
      * Causes all hosts in the watchlist to be pinged
      * using {@link AsyncListPing}.
      */
-    public void refreshPingList(){
+    public void refreshPingList() {
 
-        if(Utility.gotConnection(activity)){
+        if (Utility.gotConnection(activity)) {
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
-        }else{
+        } else {
             Toast.makeText(activity, getString(R.string.offline_toast),
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void loadList(){
+    private void loadList() {
 
         InputStream in = null;
-        try{
+        try {
             in = activity.openFileInput(MainActivity.FILENAME);
-            if(in !=null) {
+            if (in != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 String hostname;
                 while ((hostname = reader.readLine()) != null) {
@@ -169,41 +168,45 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
                 }
                 recyclerAdapter.notifyDataSetChanged();
             }
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             Log.e(TAG, "loadList(): loading list from file failed " + ioe.toString());
-        }finally{
+        } finally {
             //if file was empty or not found, set list status empty:
-            if(pingList.isEmpty()){
+            if (pingList.isEmpty()) {
                 Log.d(TAG, "loadList(): host list is empty");
                 PrefsManager.setPingListEmpty(activity, true);
             }
-            if(in != null){
-                try { in.close(); } catch (IOException ioe) { ioe.printStackTrace(); }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
             }
         }
     }
 
-    private void addHostToList(String validatedHostname, boolean saveList){
+    private void addHostToList(String validatedHostname, boolean saveList) {
         // if this is the first host in the list, set list status from empty to not-empty:
-        if(pingList.isEmpty()){
+        if (pingList.isEmpty()) {
             Log.d(TAG, "addHostToList() - host list is empty");
             PrefsManager.setPingListEmpty(activity, false);
         }
         // make new Ping-Item, add to list, save list to file, ping host
         PingItem host = new PingItem(validatedHostname);
         pingList.add(host);
-        if(saveList){
+        if (saveList) {
             saveList();
         }
         pingHostFromList(host);
     }
 
-    private void pingHostFromList(PingItem item){
+    private void pingHostFromList(PingItem item) {
 
-        if(Utility.gotConnection(getActivity())){
+        if (Utility.gotConnection(getActivity())) {
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(item);
-        }else{
+        } else {
             Toast.makeText(activity, getString(R.string.offline_toast),
                     Toast.LENGTH_SHORT).show();
         }
@@ -214,18 +217,22 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
      * Writes the hostname of each item currently contained in our
      * {@code ArrayList} to a local file.
      */
-    private void saveList(){
+    private void saveList() {
         OutputStreamWriter out = null;
-        try{
+        try {
             out = new OutputStreamWriter(activity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE));
-            for(int i=0; i<pingList.size(); i++){
+            for (int i = 0; i < pingList.size(); i++) {
                 out.write(pingList.get(i).getHostname() + "\n");
             }
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             Log.e(TAG, "PLM: writing to file failed", ioe);
-        }finally{
-            if(out !=null){
-                try{ out.close(); }catch(IOException ioe){ ioe.printStackTrace(); }
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
             }
         }
     }
@@ -235,8 +242,8 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
      * Clears all items from our {@code ArrayList}, deletes the local file
      * containing the hostnames and makes sure all background pinging is stopped.
      */
-    public void clearList(){
-        if(!pingList.isEmpty()){
+    public void clearList() {
+        if (!pingList.isEmpty()) {
             pingList.clear();
         }
         PrefsManager.setPingListEmpty(activity, true);
@@ -251,7 +258,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         recyclerAdapter.notifyDataSetChanged();
     }
 
-    private void showClearListDialog(){
+    private void showClearListDialog() {
         AlertDialog dialog = new AlertDialog.Builder(activity).create();
         dialog.setMessage("Clear all hosts from the list?");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
@@ -261,7 +268,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
                 dialog.dismiss();
             }
         });
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener(){
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 dialog.dismiss();
@@ -271,7 +278,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
     }
 
     @Override
-    public void onAsyncPingCompleted(){
+    public void onAsyncPingCompleted() {
         recyclerAdapter.notifyDataSetChanged();
         refreshLayout.setRefreshing(false);
     }
@@ -284,7 +291,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_deleteList:
                 showClearListDialog();
                 return true;
@@ -295,7 +302,9 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
     }
 
-    /************ ON CARD CLICK *************/
+    /************
+     * ON CARD CLICK
+     *************/
 
     @Override
     public void onItemClick(final View view, final int position) {
@@ -314,9 +323,9 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         pingList.remove(position);
-                        if(pingList.isEmpty()){
+                        if (pingList.isEmpty()) {
                             clearList();
-                        }else{
+                        } else {
                             recyclerAdapter.notifyDataSetChanged();
                             saveList();
                         }
@@ -332,6 +341,26 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
                 .show();
 
     }
+    /*
+    todo: fix crash - scrolling up in emulator
+
+    Process: com.soopercode.pingapp_tv2, PID: 2863
+                                                                          java.lang.ArrayIndexOutOfBoundsException: length=18; index=-1
+                                                                              at java.util.ArrayList.get(ArrayList.java:310)
+                                                                              at com.soopercode.pingapp.listview.RecyclerFragment.onCardLongClick(RecyclerFragment.java:321)
+                                                                              at com.soopercode.pingapp.listview.RecyclerItemClickListener$1.onLongPress(RecyclerItemClickListener.java:33)
+                                                                              at android.view.GestureDetector.dispatchLongPress(GestureDetector.java:690)
+                                                                              at android.view.GestureDetector.access$200(GestureDetector.java:37)
+                                                                              at android.view.GestureDetector$GestureHandler.handleMessage(GestureDetector.java:266)
+                                                                              at android.os.Handler.dispatchMessage(Handler.java:102)
+                                                                              at android.os.Looper.loop(Looper.java:136)
+                                                                              at android.app.ActivityThread.main(ActivityThread.java:5001)
+                                                                              at java.lang.reflect.Method.invokeNative(Native Method)
+                                                                              at java.lang.reflect.Method.invoke(Method.java:515)
+                                                                              at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:785)
+                                                                              at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:601)
+                                                                              at dalvik.system.NativeStart.main(Native Method)
+     */
 
     /*
     *  need this because we have a Collapsing Toolbar
@@ -344,7 +373,6 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
 
     /***************** STUFF LEFT OVER FROM PingListManager ************************/
-
 
 
 //
