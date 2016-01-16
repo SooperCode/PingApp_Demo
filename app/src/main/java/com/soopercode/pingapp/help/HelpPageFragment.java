@@ -15,7 +15,7 @@ import com.soopercode.pingapp.R;
 /**
  * Fragment that holds the individual help page on the App's Help Screen.
  *
- * @author  Ria
+ * @author Ria
  */
 public class HelpPageFragment extends Fragment {
 
@@ -27,8 +27,8 @@ public class HelpPageFragment extends Fragment {
      * Retrieves the ID set at creation of this instance and sets up
      * the help page associated with this ID.
      *
-     * @param savedInstanceState    If the fragment is being re-created from
-     *                              a previous saved state, this is the state. [SDK quote]
+     * @param savedInstanceState If the fragment is being re-created from
+     *                           a previous saved state, this is the state. [SDK quote]
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,13 +41,13 @@ public class HelpPageFragment extends Fragment {
     /**
      * Initializes the UI view of this fragment.
      *
-     * @param inflater              The LayoutInflater object that is used to inflate
-     *                              the views in this fragment
-     * @param container             If non-null, this is the parent view that the fragment's
-     *                              UI should be attached to [SDK quote]
-     * @param savedInstanceState    If non-null, this fragment is being re-constructed
-     *                              from a previous saved state as given here [SDK quote]
-     * @return                      The View for the fragment's UI
+     * @param inflater           The LayoutInflater object that is used to inflate
+     *                           the views in this fragment
+     * @param container          If non-null, this is the parent view that the fragment's
+     *                           UI should be attached to [SDK quote]
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state as given here [SDK quote]
+     * @return The View for the fragment's UI
      */
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

@@ -36,7 +36,7 @@ import java.util.Map;
  * by {@link BackgroundPingManager} at the scheduled intervals.
  * Finishes its activity as soon as it is done pinging all hosts from the list.
  *
- * @author  Ria
+ * @author Ria
  */
 public class BackgroundPinger extends Service {
 
@@ -50,12 +50,12 @@ public class BackgroundPinger extends Service {
      * Called by the system every time this Service is started by
      * the {@link android.app.AlarmManager} at the scheduled ping intervals.
      *
-     * @param intent    The Intent that started this service (not relevant to this code)
-     * @param flags     Additional data about this start request (not relevant to this code)
-     * @param startId   A unique integer representing this specific request to start
-     *                  (not relevant to this code)
-     * @return          Call to overridden method in Service, which returns a value that
-     *                  informs the system about details of this service's start/stop behavior
+     * @param intent  The Intent that started this service (not relevant to this code)
+     * @param flags   Additional data about this start request (not relevant to this code)
+     * @param startId A unique integer representing this specific request to start
+     *                (not relevant to this code)
+     * @return Call to overridden method in Service, which returns a value that
+     * informs the system about details of this service's start/stop behavior
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -67,7 +67,7 @@ public class BackgroundPinger extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private Runnable runner = new Runnable(){
+    private Runnable runner = new Runnable() {
         @Override
         public void run() {
             ping(MainActivity.FILENAME);
@@ -81,13 +81,13 @@ public class BackgroundPinger extends Service {
      * {@link BackgroundPinger.NotificationHandler}.
      * Started on a separate thread.
      *
-     * @param filename  The name of the local file that contains the list of hostnames
+     * @param filename The name of the local file that contains the list of hostnames
      */
-    private void ping(String filename){
+    private void ping(String filename) {
         //check if phone is online:
-        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if(netInfo !=null && netInfo.isConnected()) {
+        if (netInfo != null && netInfo.isConnected()) {
             InputStream in = null;
             try {
                 in = openFileInput(filename);
@@ -109,16 +109,24 @@ public class BackgroundPinger extends Service {
                 Log.e(TAG, "BP: loading list from file failed", ioe);
             } finally {
                 if (in != null) {
-                    try { in.close(); } catch (IOException ioe) { ioe.printStackTrace(); }
+                    try {
+                        in.close();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
                 }
                 doneHandler.sendEmptyMessage(0);
             }
         }
     }
 
-    /** not implemented */
+    /**
+     * not implemented
+     */
     @Override
-    public IBinder onBind(Intent intent) { return null; }
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
 
     /* -------------- HANDLER CLASSES -------------- */
@@ -128,7 +136,7 @@ public class BackgroundPinger extends Service {
      * {@link BackgroundPinger} after a host has responded
      * positively to a ping request.
      */
-    private static class NotificationHandler extends Handler{
+    private static class NotificationHandler extends Handler {
 
         private static Map<String, Integer> hostsNotified = new HashMap<>();
         private Context context;
@@ -137,9 +145,9 @@ public class BackgroundPinger extends Service {
          * Constructs a new NotificationHandler with a reference to
          * the BackgroundPinger service object that is calling this constructor.
          *
-         * @param outer     A reference to the current BackgroundPinger object
+         * @param outer A reference to the current BackgroundPinger object
          */
-        public NotificationHandler(BackgroundPinger outer){
+        public NotificationHandler(BackgroundPinger outer) {
             context = outer.getApplicationContext();
         }
 
@@ -147,18 +155,18 @@ public class BackgroundPinger extends Service {
          * Receives the message sent from BackgroundPinger's background thread
          * each time a host has responded to the ping request
          *
-         * @param msg   A {@link android.os.Message} object
+         * @param msg A {@link android.os.Message} object
          */
         @Override
         public void handleMessage(Message msg) {
-            if(msg !=null){
+            if (msg != null) {
                 String hostname = msg.getData().getString("hostname");
                 showNotification(hostname);
 
                 // FOR TESTING: if Toast-switch is activated, show Toast.
                 SharedPreferences sharedPrefs
                         = PreferenceManager.getDefaultSharedPreferences(context);
-                if(sharedPrefs.getBoolean("toast_switch", false)){
+                if (sharedPrefs.getBoolean("toast_switch", false)) {
                     Toast.makeText(context, hostname, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -168,15 +176,15 @@ public class BackgroundPinger extends Service {
          * Sends a notification to the user with the message that the specified
          * host has responded positively to the ping request.
          *
-         * @param host  The host URL that has responded to the ping request.
+         * @param host The host URL that has responded to the ping request.
          */
-        private void showNotification(String host){
+        private void showNotification(String host) {
             //check if host is already in the list:
             int notificationID = 0;
-            if(hostsNotified.containsKey(host)){
+            if (hostsNotified.containsKey(host)) {
                 notificationID = hostsNotified.get(host);
-            }else{
-                notificationID = hostsNotified.size()+1;
+            } else {
+                notificationID = hostsNotified.size() + 1;
                 hostsNotified.put(host, notificationID);
             }
             // build the notification
@@ -191,7 +199,7 @@ public class BackgroundPinger extends Service {
             //check if sound on or muted (default: sound/vibrate)
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             boolean soundOn = sharedPrefs.getBoolean("notification_sound", true);
-            if(soundOn){
+            if (soundOn) {
                 notification.setDefaults(Notification.DEFAULT_ALL);
             }
 
@@ -199,7 +207,7 @@ public class BackgroundPinger extends Service {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             notification.setContentIntent(pendingIntent);
 
-            NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             nm.notify(notificationID, notification.build());
 
         }
@@ -209,7 +217,7 @@ public class BackgroundPinger extends Service {
      * Stops the Service {@link com.soopercode.pingapp.background.BackgroundPinger}
      * after all hosts of the watchlist have been pinged.
      */
-    private static class DoneHandler extends Handler{
+    private static class DoneHandler extends Handler {
 
         private BackgroundPinger outer; //reference to outer class
 
@@ -219,7 +227,7 @@ public class BackgroundPinger extends Service {
          *
          * @param outer A reference to the current BackgroundPinger object
          */
-        public DoneHandler(BackgroundPinger outer){
+        public DoneHandler(BackgroundPinger outer) {
             this.outer = outer;
         }
 
@@ -227,7 +235,7 @@ public class BackgroundPinger extends Service {
          * Receives the message sent from BackgroundPinger's background thread
          * and stops the BackgroundPinger service.
          *
-         * @param msg   A {@link android.os.Message} object
+         * @param msg A {@link android.os.Message} object
          */
         @Override
         public void handleMessage(Message msg) {

@@ -12,7 +12,7 @@ import com.soopercode.pingapp.utils.Utility;
  * the pinging of hosts in the watchlist, including
  * operations that run on a background thread.
  *
- * @author  Ria
+ * @author Ria
  */
 public class AsyncListPing extends AsyncTask<PingItem, Void, Void> {
 
@@ -23,9 +23,9 @@ public class AsyncListPing extends AsyncTask<PingItem, Void, Void> {
      * Creates a new instance of this class with the references necessary
      * for the operations to be performed.
      *
-     * @param completer     Reference to the object to be notified after the task is done
+     * @param completer Reference to the object to be notified after the task is done
      */
-    public AsyncListPing(OnAsyncCompleted completer){
+    public AsyncListPing(OnAsyncCompleted completer) {
         this.completer = completer;
     }
 
@@ -50,7 +50,7 @@ public class AsyncListPing extends AsyncTask<PingItem, Void, Void> {
 
         SocketPinger socketPinger = new SocketPinger();
         HttpPinger httpPinger = new HttpPinger();
-        for(PingItem item : items){
+        for (PingItem item : items) {
             String hostname = item.getHostname();
             item.setAvailable(socketPinger.checkConnection(hostname));
             item.setResponseCode(httpPinger.getResponseCode(hostname));

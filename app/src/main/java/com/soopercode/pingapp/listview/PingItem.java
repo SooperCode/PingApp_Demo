@@ -3,7 +3,7 @@ package com.soopercode.pingapp.listview;
 /**
  * Holds the data for each host in the watchlist.
  *
- * @author  Ria
+ * @author Ria
  */
 public class PingItem {
 

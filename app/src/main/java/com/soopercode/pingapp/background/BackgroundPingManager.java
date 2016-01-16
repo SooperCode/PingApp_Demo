@@ -17,9 +17,9 @@ import com.soopercode.pingapp.PrefsManager;
  * This BroadcastReceiver is notified each time the phone has finished rebooting
  * in order to make sure background pinging stays active when it's supposed to.
  *
- * @author  Ria
+ * @author Ria
  */
-public class BackgroundPingManager extends BroadcastReceiver{
+public class BackgroundPingManager extends BroadcastReceiver {
 
     private static final String TAG = BackgroundPingManager.class.getSimpleName();
 
@@ -45,8 +45,8 @@ public class BackgroundPingManager extends BroadcastReceiver{
      * when SettingsActivity has detected configurations changes,
      * or when PingListManager has cleared the watchlist.
      *
-     * @param context   The Context in which the receiver is running
-     * @param intent    The Intent being received
+     * @param context The Context in which the receiver is running
+     * @param intent  The Intent being received
      */
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -60,10 +60,10 @@ public class BackgroundPingManager extends BroadcastReceiver{
         // check for message from SettingsActivity or PingListManager:
         Bundle extras = intent.getExtras();
         int msg = -1;
-        if(extras !=null){
+        if (extras != null) {
             msg = extras.getInt("switchOn", -1);
         }
-        switch(msg){
+        switch (msg) {
             case 1: //turn on bg pinging
                 activateBackgroundPinging();
                 break;
@@ -73,7 +73,7 @@ public class BackgroundPingManager extends BroadcastReceiver{
             //else the interval has changed OR we must have been revived after reboot:
             default:
                 //check if bg-pinging is supposed to be active:
-                if(PrefsManager.isBgPingingActive(context)){
+                if (PrefsManager.isBgPingingActive(context)) {
                     activateBackgroundPinging();
                 }
         }
@@ -83,11 +83,11 @@ public class BackgroundPingManager extends BroadcastReceiver{
      * Registers an Intent with the {@link android.app.AlarmManager} to start
      * the {@link BackgroundPinger} service at the currently defined ping intervals
      */
-    private void activateBackgroundPinging(){
+    private void activateBackgroundPinging() {
         backgroundPinging = new Intent(context, BackgroundPinger.class);
-        alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         pendingIntent = PendingIntent.getService(context, 0, backgroundPinging, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+2000, pingInterval, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 2000, pingInterval, pendingIntent);
         Log.d(TAG, "BGPingManager: Alarm is set!");
 
         // set pinging status to active:
@@ -97,12 +97,12 @@ public class BackgroundPingManager extends BroadcastReceiver{
     /**
      * Deactivates background pinging by canceling the scheduled alarms.
      */
-    private void deactivateBackgroundPinging(){
+    private void deactivateBackgroundPinging() {
         //reuse objects if possible
-        if(alarmManager !=null && pendingIntent !=null && backgroundPinging !=null){
+        if (alarmManager != null && pendingIntent != null && backgroundPinging != null) {
             alarmManager.cancel(pendingIntent);
-        }else{
-            alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        } else {
+            alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             backgroundPinging = new Intent(context, BackgroundPinger.class);
             pendingIntent = PendingIntent.getService(context, 0, backgroundPinging, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.cancel(pendingIntent);

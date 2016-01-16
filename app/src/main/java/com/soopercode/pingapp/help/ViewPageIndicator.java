@@ -15,7 +15,7 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 /**
  * Adapted this class from Jake Wharton's ViewPagerIndicator library sample.
  */
-public class ViewPageIndicator extends View implements ViewPager.OnPageChangeListener{
+public class ViewPageIndicator extends View implements ViewPager.OnPageChangeListener {
 
     private final static String TAG = ViewPageIndicator.class.getSimpleName();
 
@@ -29,7 +29,7 @@ public class ViewPageIndicator extends View implements ViewPager.OnPageChangeLis
     private int snapPage; // the page we're snapping to
 
 
-    public ViewPageIndicator(Context context, AttributeSet attrs){
+    public ViewPageIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         Resources res = getResources();
@@ -44,7 +44,7 @@ public class ViewPageIndicator extends View implements ViewPager.OnPageChangeLis
     }
 
     @Override
-    protected void onDraw(Canvas canvas){
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         int widthSize = getWidth();
@@ -54,7 +54,7 @@ public class ViewPageIndicator extends View implements ViewPager.OnPageChangeLis
 
         final float spaceByRadius = radius * 5;
         final float heightOffset = heightPaddingTop + radius;
-        float widthOffset = widthPaddingLeft + radius*2.5f;
+        float widthOffset = widthPaddingLeft + radius * 2.5f;
         widthOffset += ((widthSize - widthPaddingLeft - widthPaddingRight) / 2.0f)
                 - ((pageCount * spaceByRadius) / 2.0f);
 
@@ -66,17 +66,17 @@ public class ViewPageIndicator extends View implements ViewPager.OnPageChangeLis
         float dX, dY;
 
         // Draw stroked circles
-        for(int i=0; i<pageCount; i++){
-            dX = widthOffset + (i*spaceByRadius);
+        for (int i = 0; i < pageCount; i++) {
+            dX = widthOffset + (i * spaceByRadius);
             dY = heightOffset;
 
             // Only paint fill if not completely transparent
-            if(paintPageFill.getAlpha() > 0){
+            if (paintPageFill.getAlpha() > 0) {
                 canvas.drawCircle(dX, dY, pageFillRadius, paintPageFill);
             }
 
             // Only paint stroke if stroke width was non-zero
-            if(pageFillRadius != radius){
+            if (pageFillRadius != radius) {
                 canvas.drawCircle(dX, dY, radius, paintStroke);
             }
         }
@@ -91,28 +91,28 @@ public class ViewPageIndicator extends View implements ViewPager.OnPageChangeLis
 
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         currentPage = position;
         invalidate();
     }
 
     @Override
-    public void onPageSelected(int position){
+    public void onPageSelected(int position) {
         currentPage = position;
         snapPage = position;
         invalidate();
     }
 
     @Override
-    public void onPageScrollStateChanged(int state){
+    public void onPageScrollStateChanged(int state) {
         /* don't need this */
     }
 
     /**
      * Bind this indicator to the ViewPager
      */
-    public void setViewPager(ViewPager viewPager){
-        if(this.viewPager == viewPager){
+    public void setViewPager(ViewPager viewPager) {
+        if (this.viewPager == viewPager) {
             return;
         }
         this.viewPager = viewPager;

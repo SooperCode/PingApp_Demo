@@ -21,28 +21,28 @@ import com.soopercode.pingapp.help.HelpActivity;
  * Represents the Settings-Screen of this App.
  * Holds the {@code PreferenceFragment} that contains the settings.
  *
- * @author  Ria
+ * @author Ria
  */
 
-public class SettingsActivity extends AppCompatActivity{
+public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     /**
      * Initializes this Activity.
      *
-     * @param savedInstanceState    If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.
-     *     <b><i>Note: Otherwise it is null.</i></b>
-     *                              [Android source code]
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in {@link #onSaveInstanceState}.
+     *                           <b><i>Note: Otherwise it is null.</i></b>
+     *                           [Android source code]
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_settings);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
     }
@@ -50,8 +50,8 @@ public class SettingsActivity extends AppCompatActivity{
     /**
      * Initializes the contents of this Activity's options menu.
      *
-     * @param menu      The options menu
-     * @return          true to make the menu visible
+     * @param menu The options menu
+     * @return true to make the menu visible
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -63,13 +63,13 @@ public class SettingsActivity extends AppCompatActivity{
      * Called whenever a menu item is selected and processes
      * the request as defined.
      *
-     * @param item      The menu item that was selected
-     * @return          true to signal that request has been consumed and
-     *                  no further processing is necessary
+     * @param item The menu item that was selected
+     * @return true to signal that request has been consumed and
+     * no further processing is necessary
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.settingsmenu_help:
                 startActivity(new Intent(this, HelpActivity.class));
                 return true;
@@ -82,19 +82,19 @@ public class SettingsActivity extends AppCompatActivity{
     /**
      * {@code Fragment} containing the content of this Settings Screen.
      *
-     * @author  Ria
+     * @author Ria
      */
-    public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener{
+    public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
         private Context context;
 
         /**
          * Initializes this {@code Fragment}, adding the {@code Preference} widgets.
          *
-         * @param savedInstanceState    If the activity is being re-initialized after
-         *     previously being shut down then this Bundle contains the data it most
-         *     recently supplied in {@link #onSaveInstanceState}.
-         *     Otherwise it is null. [SDK quote]
+         * @param savedInstanceState If the activity is being re-initialized after
+         *                           previously being shut down then this Bundle contains the data it most
+         *                           recently supplied in {@link #onSaveInstanceState}.
+         *                           Otherwise it is null. [SDK quote]
          */
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -111,17 +111,17 @@ public class SettingsActivity extends AppCompatActivity{
         @Override
         public void onResume() {
             super.onResume();
-            SwitchPreference switchPref = (SwitchPreference)findPreference("switch_watchlist");
+            SwitchPreference switchPref = (SwitchPreference) findPreference("switch_watchlist");
 
             //if ping list is empty -> disable bg-ping-switch
-            if(PrefsManager.isPingListEmpty(context)){
+            if (PrefsManager.isPingListEmpty(context)) {
                 switchPref.setChecked(false);
                 switchPref.setEnabled(false);
                 Log.d(TAG, "SA: set switch disabled.");
-            }else{
+            } else {
                 boolean bgPingingIsOn = PrefsManager.isBgPingingActive(context);
                 switchPref.setChecked(bgPingingIsOn);
-                Log.d(TAG, "SA: bgpinging_active is: " + (bgPingingIsOn? "on" : "off"));
+                Log.d(TAG, "SA: bgpinging_active is: " + (bgPingingIsOn ? "on" : "off"));
                 switchPref.setOnPreferenceChangeListener(this);
             }
             findPreference("listprefs_intervals").setOnPreferenceChangeListener(this);
@@ -131,9 +131,9 @@ public class SettingsActivity extends AppCompatActivity{
          * Called when a Preference has been changed by the user,
          * before the state of the Preference has been updated.
          *
-         * @param preference    The changed Preference
-         * @param newValue      The new value of the Preference
-         * @return              true to update the state of the Preference with the new value
+         * @param preference The changed Preference
+         * @param newValue   The new value of the Preference
+         * @return true to update the state of the Preference with the new value
          */
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -144,16 +144,16 @@ public class SettingsActivity extends AppCompatActivity{
             int msg = 0;
 
             // check which preference has changed:
-            if(preference instanceof SwitchPreference){
+            if (preference instanceof SwitchPreference) {
                 // if it was watchlist switch, send BGPManager message about it
-                if((Boolean)newValue){
+                if ((Boolean) newValue) {
                     msg = 1; //switch has been deactivated.
-                }else{
+                } else {
                     msg = 2; //switch has been activated
                 }
-            }else if(preference instanceof ListPreference){
+            } else if (preference instanceof ListPreference) {
                 // if ping interval has changed, update summary
-                ListPreference pref = (ListPreference)preference;
+                ListPreference pref = (ListPreference) preference;
                 int index = pref.findIndexOfValue(newValue.toString());
                 pref.setSummary(String.format(
                         getString(R.string.pref_interval_summary),

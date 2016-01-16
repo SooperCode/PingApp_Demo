@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Represents the Help Pages of this App.
  *
- * @author  Ria
+ * @author Ria
  */
-public class HelpActivity extends AppCompatActivity{
+public class HelpActivity extends AppCompatActivity {
 
     private List<HelpPages.HelpContent> contents;
 
@@ -26,22 +26,22 @@ public class HelpActivity extends AppCompatActivity{
      * {@link android.support.v4.view.ViewPager}.
      * Called every time the user navigates to the Help Section.
      *
-     * @param savedInstanceState    If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.
-     *     <b><i>Note: Otherwise it is null.</i></b>
-     *                              [quoted from Android source code]
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in {@link #onSaveInstanceState}.
+     *                           <b><i>Note: Otherwise it is null.</i></b>
+     *                           [quoted from Android source code]
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_help);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_help);
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
 
-        ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager_help);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager_help);
         viewPager.setPageMargin(30);
         contents = HelpPages.getInstance(this).getContents();
 
@@ -72,7 +72,7 @@ public class HelpActivity extends AppCompatActivity{
             }
         });
 
-        ViewPageIndicator indicator = (ViewPageIndicator)findViewById(R.id.viewpage_indicator);
+        ViewPageIndicator indicator = (ViewPageIndicator) findViewById(R.id.viewpage_indicator);
         indicator.setViewPager(viewPager);
     }
 

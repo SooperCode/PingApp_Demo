@@ -26,7 +26,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private Context context;
     RecyclerView recyclerView;
 
-    public RecyclerAdapter(Context context, List<PingItem> pingItems, boolean nerdViewOn){
+    public RecyclerAdapter(Context context, List<PingItem> pingItems, boolean nerdViewOn) {
         this.context = context;
         this.pingItems = pingItems;
         this.nerdViewOn = nerdViewOn;
@@ -37,11 +37,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public RecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(
-                nerdViewOn? R.layout.cardview_nerd_layout : R.layout.cardview_layout,
+                nerdViewOn ? R.layout.cardview_nerd_layout : R.layout.cardview_layout,
                 parent, false);
-    //    view.setOnClickListener(new OnCardClickListener(this));
+        //    view.setOnClickListener(new OnCardClickListener(this));
 
-        recyclerView = (RecyclerView)parent;
+        recyclerView = (RecyclerView) parent;
 
         return new RecyclerHolder(view);
     }
@@ -56,19 +56,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 View.INVISIBLE : View.GONE);
 
         PingItem pingItem = pingItems.get(position);
-        if(!nerdViewOn){
+        if (!nerdViewOn) {
             holder.host.setText(pingItem.getHostname());
-            if(pingItem.isAvailable()){
+            if (pingItem.isAvailable()) {
                 holder.status.setImageResource(R.drawable.green_tick_60x49);
                 holder.host.setTextColor(Color.WHITE);
-            }else{
+            } else {
                 holder.status.setImageResource(R.drawable.red_cross_48x48);
                 holder.host.setTextColor(Color.RED);
             }
-        }else{
+        } else {
             holder.hostNerd.setText(pingItem.getHostname());
             int responseCode = pingItem.getResponseCode();
-            holder.hostNerd.setTextColor(pingItem.isAvailable()? Color.WHITE : Color.RED);
+            holder.hostNerd.setTextColor(pingItem.isAvailable() ? Color.WHITE : Color.RED);
             holder.responseCode.setText(String.format("%03d", responseCode));
             holder.responseCode.setTextColor(getResponseColor(responseCode));
             holder.hostIp.setText(pingItem.getIp());
@@ -83,24 +83,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return pingItems.size();
     }
 
-    private int getResponseColor(int responseCode){
+    private int getResponseColor(int responseCode) {
         // choose Color according to status code category:
-        if(100 <= responseCode && responseCode <= 199){
+        if (100 <= responseCode && responseCode <= 199) {
             return Color.GRAY;
-        }else if(200 <= responseCode && responseCode <= 399){
+        } else if (200 <= responseCode && responseCode <= 399) {
             return Color.GREEN;
-        }else if(400 <= responseCode && responseCode <= 499){
+        } else if (400 <= responseCode && responseCode <= 499) {
             return Color.YELLOW;
-        }else if(500 <= responseCode && responseCode <= 599){
+        } else if (500 <= responseCode && responseCode <= 599) {
             return Color.BLUE;
-        }else{
+        } else {
             return Color.RED;
         }
     }
 
     /* ********************* VIEW HOLDER ********************** */
 
-    public static class RecyclerHolder extends RecyclerView.ViewHolder{
+    public static class RecyclerHolder extends RecyclerView.ViewHolder {
 
         // normal view
         TextView host;
@@ -118,13 +118,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         public RecyclerHolder(View itemView) {
             super(itemView);
 
-            host = (TextView)itemView.findViewById(R.id.listview_host);
-            status = (ImageView)itemView.findViewById(R.id.listview_status);
+            host = (TextView) itemView.findViewById(R.id.listview_host);
+            status = (ImageView) itemView.findViewById(R.id.listview_status);
 
-            hostNerd = (TextView)itemView.findViewById(R.id.nerdview_hostname);
-            hostIp = (TextView)itemView.findViewById(R.id.nerdview_hostIP);
-            responseCode = (TextView)itemView.findViewById(R.id.nerdview_responseCode);
-            responseText = (TextView)itemView.findViewById(R.id.nerdview_responseText);
+            hostNerd = (TextView) itemView.findViewById(R.id.nerdview_hostname);
+            hostIp = (TextView) itemView.findViewById(R.id.nerdview_hostIP);
+            responseCode = (TextView) itemView.findViewById(R.id.nerdview_responseCode);
+            responseText = (TextView) itemView.findViewById(R.id.nerdview_responseText);
 
             invisibleView = itemView.findViewById(R.id.view_invisible);
         }
