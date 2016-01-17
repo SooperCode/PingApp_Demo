@@ -350,10 +350,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(prefsIntent, CHANGE_SETTINGS_REQUEST);
                 return true;
 
-            case R.id.menu_help:
-                startActivity(new Intent(this, HelpActivity.class));
-                return true;
-
             case R.id.menu_pinging_on:
                 Log.d(TAG, "menu: turn pinging on clicked");
                 sendMessageToBackgroundPingManager(BackgroundPingManager.MESSAGE_ACTIVATE);

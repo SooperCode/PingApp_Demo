@@ -9,11 +9,13 @@
         android:orderInCategory="102"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/menu_help"
-        android:title="@string/menu_help"
-        android:orderInCategory="103"
-        app:showAsAction="never" />
+    <!-- taking out the help pages for 2.0
+        leave it commented out in case we need it again soon... -->
+    <!--<item-->
+        <!--android:id="@+id/menu_help"-->
+        <!--android:title="@string/menu_help"-->
+        <!--android:orderInCategory="103"-->
+        <!--app:showAsAction="never" />-->
 
     <item
         android:id="@+id/menu_pinging_on"

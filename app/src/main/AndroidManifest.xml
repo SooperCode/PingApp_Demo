@@ -42,15 +42,16 @@
                 android:value="com.soopercode.pingapp.MainActivity"/>
         </activity>
 
-        <activity
-            android:name="com.soopercode.pingapp.help.HelpActivity"
-            android:label="@string/activity_help_title"
-            android:parentActivityName="com.soopercode.pingapp.MainActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.soopercode.pingapp.MainActivity"/>
-        </activity>
+        <!-- TEMPORARILY TAKING OUT THE HELP PAGES IN VERSION 2.0 -->
+        <!--<activity-->
+            <!--android:name="com.soopercode.pingapp.help.HelpActivity"-->
+            <!--android:label="@string/activity_help_title"-->
+            <!--android:parentActivityName="com.soopercode.pingapp.MainActivity"-->
+            <!--android:screenOrientation="portrait">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.soopercode.pingapp.MainActivity"/>-->
+        <!--</activity>-->
 
         <activity
             android:name="com.soopercode.pingapp.DisplayResponseActivity"

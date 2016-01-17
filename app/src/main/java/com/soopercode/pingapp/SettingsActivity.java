@@ -11,11 +11,8 @@ import android.preference.SwitchPreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.soopercode.pingapp.background.BackgroundPingManager;
-import com.soopercode.pingapp.help.HelpActivity;
 
 /**
  * Represents the Settings-Screen of this App.
@@ -26,17 +23,6 @@ import com.soopercode.pingapp.help.HelpActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final String TAG = SettingsActivity.class.getSimpleName();
-
-    /**
-     * Initializes this Activity.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *                           previously being shut down then this Bundle contains the data it most
-     *                           recently supplied in {@link #onSaveInstanceState}.
-     *                           <b><i>Note: Otherwise it is null.</i></b>
-     *                           [Android source code]
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,38 +31,6 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
-    }
-
-    /**
-     * Initializes the contents of this Activity's options menu.
-     *
-     * @param menu The options menu
-     * @return true to make the menu visible
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
-        return true;
-    }
-
-    /**
-     * Called whenever a menu item is selected and processes
-     * the request as defined.
-     *
-     * @param item The menu item that was selected
-     * @return true to signal that request has been consumed and
-     * no further processing is necessary
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settingsmenu_help:
-                startActivity(new Intent(this, HelpActivity.class));
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /**
@@ -165,4 +119,26 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         }
     }
+
+
+        /* removing the help pages for 2.0
+     leave code commented out in case we build them in again soon... */
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_settings, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.settingsmenu_help:
+//                startActivity(new Intent(this, HelpActivity.class));
+//                return true;
+//
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 }
