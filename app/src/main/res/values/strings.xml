@@ -88,7 +88,7 @@
     <string name="rc_3xx">\"had to redirect you.\"</string>
     <string name="rc_3xx_2">\"Xtreme Redirecting...\"</string>
     <string name="rc_3xx_3">\"nice URL but I\'ve seen better.\"</string>
-    <string name="rc_3xx_4">\"was this your first URL or what?!\"</string>
+    <string name="rc_3xx_4">\"Redirected - was this your first URL or what?!\"</string>
 
     <string name="rc_4xx">\"you got it wrong, dude!\"</string>
     <string name="rc_4xx_2">\"you ain\'t gettin in here.\"</string>

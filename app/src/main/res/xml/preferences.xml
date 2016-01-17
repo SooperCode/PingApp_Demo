@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- TODO: want custom layout so we can have a divider between each setting.
+        (temporarily set them all to gone in styles.xml) -->
+
     <PreferenceCategory
         android:title="@string/pref_cat_watchlist">
 
