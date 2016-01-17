@@ -5,7 +5,7 @@
     <item
         android:id="@+id/menu_deleteList"
         android:title="@string/menu_clearList"
-        android:orderInCategory="104"
+        android:orderInCategory="106"
         app:showAsAction="never" />
 
 </menu>

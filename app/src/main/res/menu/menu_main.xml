@@ -15,4 +15,16 @@
         android:orderInCategory="103"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/menu_pinging_on"
+        android:title="@string/menu_pinging_on"
+        android:orderInCategory="104"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_pinging_off"
+        android:title="@string/menu_pinging_off"
+        android:orderInCategory="105"
+        app:showAsAction="never" />
+
 </menu>

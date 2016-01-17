@@ -86,6 +86,8 @@ public class SettingsActivity extends AppCompatActivity {
      */
     public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
+        private final static String TAG = PrefsFragment.class.getSimpleName();
+
         private Context context;
 
         /**
@@ -117,11 +119,11 @@ public class SettingsActivity extends AppCompatActivity {
             if (PrefsManager.isPingListEmpty(context)) {
                 switchPref.setChecked(false);
                 switchPref.setEnabled(false);
-                Log.d(TAG, "SA: set switch disabled.");
+                Log.d(TAG, "set switch disabled.");
             } else {
                 boolean bgPingingIsOn = PrefsManager.isBgPingingActive(context);
                 switchPref.setChecked(bgPingingIsOn);
-                Log.d(TAG, "SA: bgpinging_active is: " + (bgPingingIsOn ? "on" : "off"));
+                Log.d(TAG, "bgpinging_active is: " + (bgPingingIsOn ? "on" : "off"));
                 switchPref.setOnPreferenceChangeListener(this);
             }
             findPreference("listprefs_intervals").setOnPreferenceChangeListener(this);
@@ -137,20 +139,18 @@ public class SettingsActivity extends AppCompatActivity {
          */
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            Log.d(TAG, "SA-PrefsFragment: onPreferenceChange");
+            Log.d(TAG, "onPreferenceChange()");
             // prepare message for BGPManager
-            Activity currentActivity = getActivity();
-            Intent intent = new Intent(currentActivity.getBaseContext(), BackgroundPingManager.class);
-            int msg = 0;
+            final Activity currentActivity = getActivity();
+            final Intent intent = new Intent(currentActivity.getBaseContext(), BackgroundPingManager.class);
+            int msg = BackgroundPingManager.MESSAGE_EMPTY;
 
             // check which preference has changed:
             if (preference instanceof SwitchPreference) {
                 // if it was watchlist switch, send BGPManager message about it
-                if ((Boolean) newValue) {
-                    msg = 1; //switch has been deactivated.
-                } else {
-                    msg = 2; //switch has been activated
-                }
+                msg = ((Boolean) newValue) ?
+                        BackgroundPingManager.MESSAGE_ACTIVATE : BackgroundPingManager.MESSAGE_DEACTIVATE;
+
             } else if (preference instanceof ListPreference) {
                 // if ping interval has changed, update summary
                 ListPreference pref = (ListPreference) preference;
@@ -160,7 +160,7 @@ public class SettingsActivity extends AppCompatActivity {
                         pref.getEntries()[index].toString()));
             }
             // notify BGPManager
-            intent.putExtra("switchOn", msg);
+            intent.putExtra(BackgroundPingManager.EXTRA_PING_SWITCH, msg);
             currentActivity.sendBroadcast(intent);
             return true;
         }

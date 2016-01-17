@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.soopercode.pingapp.background.BackgroundPingManager;
 import com.soopercode.pingapp.help.HelpActivity;
 import com.soopercode.pingapp.listview.RecyclerFragment;
 import com.soopercode.pingapp.utils.HttpPinger;
@@ -322,6 +323,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+
+        final boolean turnOffVisible = PrefsManager.isBgPingingActive(this);
+        (menu.findItem(R.id.menu_pinging_on)).setVisible(!turnOffVisible);
+        (menu.findItem(R.id.menu_pinging_off)).setVisible(turnOffVisible);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     /**
      * Called whenever a menu item is selected and processes
      * the request as defined.
@@ -343,11 +354,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, HelpActivity.class));
                 return true;
 
+            case R.id.menu_pinging_on:
+                Log.d(TAG, "menu: turn pinging on clicked");
+                sendMessageToBackgroundPingManager(BackgroundPingManager.MESSAGE_ACTIVATE);
+                return true;
+
+            case R.id.menu_pinging_off:
+                Log.d(TAG, "menu: turn pinging off clicked");
+                sendMessageToBackgroundPingManager(BackgroundPingManager.MESSAGE_DEACTIVATE);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void sendMessageToBackgroundPingManager(final int message) {
+        final Intent intent = new Intent(this, BackgroundPingManager.class);
+        intent.putExtra(BackgroundPingManager.EXTRA_PING_SWITCH, message);
+        sendBroadcast(intent);
+    }
 
     /* -------- SETTINGS CALLBACKS --------
      * Handle changes to the "NerdView" preference.

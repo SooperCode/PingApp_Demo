@@ -22,6 +22,8 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_clearList">Clear Watchlist</string>
     <string name="menu_help">Help</string>
+    <string name="menu_pinging_on">Turn Pinging ON</string>
+    <string name="menu_pinging_off">Turn Pinging OFF</string>
 
     <!-- VIEWS -->
     <string name="promptDisplay">Enter hostname or IP address:</string>
@@ -34,7 +36,7 @@
     <!-- SETTINGS ACTIVITY -->
     <string name="activity_settings_title">PingApp Settings</string>
     <string name="pref_watchlist">Ping Watchlist</string>
-    <string name="pref_watchlist_summary">Motitor hosts &amp; get notified</string>
+    <string name="pref_watchlist_summary">Monitor hosts &amp; get notified</string>
     <string name="pref_interval">Set Ping Interval</string>
     <string name="pref_interval_summary">Pinging your hosts every %s</string>
     <string name="pref_nerdView">Set Nerd View</string>
