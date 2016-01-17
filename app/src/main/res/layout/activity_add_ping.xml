@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/pingapp_screenshot_blur60_390x594">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_add_ping"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="8dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="?attr/colorPrimary"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        android:title="@string/app_name"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="13dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7.0"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/promptDisplay"
+                style="@style/defaultStyle"
+                android:text="@string/promptDisplay"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/usersHost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="textUri"
+                android:singleLine="true"
+                android:text="@string/textfield_initialhost"
+                android:textColor="#00ffff"
+                android:textSize="20sp">
+                <!--   <requestFocus /> -->
+                <!-- android:layout_marginTop="10dp"
+                 android:hint="@string/textfield_hint" -->
+            </EditText>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/buttonErase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/erase_button"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonPingNow"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+
+            android:text="@string/buttonPingNow"
+            android:textSize="21sp"/>
+        <!-- android:background="@drawable/button_states"-->
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:text="@string/buttonAdd"
+            android:textSize="20sp"/>
+        <!-- android:background="@drawable/button_states"-->
+
+    </LinearLayout>
+
+
+</LinearLayout>

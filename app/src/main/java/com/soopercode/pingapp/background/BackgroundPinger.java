@@ -106,7 +106,7 @@ public class BackgroundPinger extends Service {
                     }
                 }
             } catch (IOException ioe) {
-                Log.e(TAG, "BP: loading list from file failed", ioe);
+                Log.e(TAG, "loading list from file failed", ioe);
             } finally {
                 if (in != null) {
                     try {

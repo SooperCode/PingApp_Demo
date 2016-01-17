@@ -1,10 +1,7 @@
 package com.soopercode.pingapp;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
@@ -16,16 +13,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.soopercode.pingapp.background.BackgroundPingManager;
-import com.soopercode.pingapp.help.HelpActivity;
 import com.soopercode.pingapp.listview.RecyclerFragment;
-import com.soopercode.pingapp.utils.HttpPinger;
-import com.soopercode.pingapp.utils.StupidUserException;
-import com.soopercode.pingapp.utils.Utility;
 
 /**
  * Represents the Main Screen of this Application.
@@ -34,27 +24,21 @@ import com.soopercode.pingapp.utils.Utility;
  * @author Ria
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     /**
      * name of the local file containing the hosts in the watchlist.
      */
     public static final String FILENAME = "pingapp";
+    public static final String EXTRA_HOSTNAME = "extra_hostname";
 
-    /**
-     * Log tag for testing & debugging
-     */
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String RECYCLER_FRAGMENT_TAG = "RF_TAG";
-
     private static final int CHANGE_SETTINGS_REQUEST = 1;
-    private static int dummyCounter = 0;
+    private static final int ADD_HOST_REQUEST = 2;
 
     private AppBarLayout appBarLayout;
-    private EditText usersHost;
-    private TextView prompt;
-    private ImageView onOfLight;
-    private String validatedHost;
+
 
     /**
      * Initializes and sets up the App's Main Screen.
@@ -66,10 +50,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *                           Otherwise it is null. [SDK quote]
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                startActivityForResult(new Intent(MainActivity.this, AddAndPingActivity.class),
+                        ADD_HOST_REQUEST);
+            }
+        });
 
         // initialize toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -117,11 +108,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
         appBarLayout.addOnOffsetChangedListener((RecyclerFragment) getSupportFragmentManager()
                 .findFragmentByTag(RECYCLER_FRAGMENT_TAG));
-//        if(dummyCounter !=0){
-//            prompt.setTextAppearance(this, R.style.defaultStyle);
-//            prompt.setText(R.string.promptDisplay);
-//            dummyCounter = 0;
-//        }
     }
 
     @Override
@@ -131,183 +117,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .findFragmentByTag(RECYCLER_FRAGMENT_TAG));
     }
 
-    /**
-     * Called after {@link #onRestoreInstanceState}, {@link #onRestart}, or
-     * {@link #onPause}. [SDK quote]
-     * Checks if background pinging is activated & displays green light when it is.
-     */
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        // set up watchlist light
-////        onOfLight = (ImageView) findViewById(R.id.imgWatchlistOn);
-////        if(PrefsManager.isBgPingingActive(this)){
-////            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.on_30x30));
-////        }else{
-////            onOfLight.setImageDrawable(getResources().getDrawable(R.drawable.off_30x30));
-////        }
-//    }
-
-    /**
-     * Called every time a View on the MainScreen is clicked
-     * and responds as defined.
-     *
-     * @param view The View that has been clicked
-     */
-    @Override
-    public void onClick(View view) {
-//        switch(view.getId()){
-//            case R.id.buttonErase:
-//                usersHost.setText("");
-//                if(dummyCounter==0){
-//                    prompt.setText(R.string.promptDisplay);
-//                    prompt.setTextAppearance(this, R.style.defaultStyle);
-//                }
-//                break;
-//
-//            case R.id.buttonPingNow:
-//                if(validateHostname(usersHost.getText().toString())){
-//                    // if we have a valid hostname: ping it
-//                    ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-//                    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-//                    if(netInfo !=null && netInfo.isConnected()){
-//                        QuickPing quickPing = new QuickPing();
-//                        quickPing.execute(validatedHost);
-//                    }else{
-//                        Toast.makeText(this, getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//                break;
-//
-//            case R.id.buttonAdd:
-//                String hostname = usersHost.getText().toString();
-//                // validate hostname before we do anything:
-//                if(validateHostname(hostname)) {
-//                    pingListManager.addNewHost(validatedHost);
-//                    usersHost.setText("");
-//                    prompt.setText(R.string.promptDisplay);
-//                    prompt.setTextAppearance(this, R.style.defaultStyle);
-//                    //hide the keyboard:
-//                    InputMethodManager inputMan = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-//                    inputMan.hideSoftInputFromWindow(usersHost.getWindowToken(), 0);
-//                }else{
-//                    Log.d(TAG, "MA: validation returned false");
-//                }
-//                break;
-//
-//            case R.id.buttonRefresh:
-//                pingListManager.pingListNow();
-//                break;
-//        }
-    }
-
-    /**
-     * Verifies whether the text entered by the user constitutes a valid URL,
-     * returns true if it does, or alerts the user if it does not.
-     *
-     * @param hostname The text entered by the user
-     * @return true if a valid URL has been obtained
-     */
-    private boolean validateHostname(String hostname) {
-        try {
-            validatedHost = Utility.validateHostname(hostname);
-            usersHost.setText(validatedHost);
-            //check the dummy-state:
-            if (dummyCounter != 0) {
-                prompt.setTextAppearance(this, R.style.defaultStyle);
-                prompt.setText(R.string.promptDisplay);
-                dummyCounter = 0;
-            }
-            return true;
-        } catch (StupidUserException sue) {
-            switch (dummyCounter) {
-                case 0:
-                    prompt.setText("Oops! Try again...");
-                    dummyCounter++;
-                    break;
-                case 1:
-                    prompt.setText("Come on, it can't be that hard!");
-                    dummyCounter++;
-                    break;
-                case 2:
-                    prompt.setText("uhm... you sure you wanna do this??");
-                    dummyCounter++;
-                    break;
-                case 3:
-                    prompt.setText("Urrgh, I give up!");
-                    //dummyCounter = 0; break;
-                    dummyCounter++;
-                    break;
-                default:
-                    prompt.setText(getString(R.string.promptDisplay));
-                    dummyCounter = 0;
-            }
-            prompt.setTextAppearance(this, R.style.negativeStyle);
-            usersHost.requestFocus();
-            Log.e(TAG, sue.toString(), sue);
-            return false;
-        }
-    }
-
-
-    /**
-     * AsyncTask that handles all operations necessary for
-     * pinging the host in the text field, including
-     * operations that run on a background thread.
-     *
-     * @author Ria
-     */
-    private class QuickPing extends AsyncTask<String, Void, Bundle> {
-
-        private ProgressDialog progressDialog;
-
-        /**
-         * Sets up a progress wheel to indicate to the user that
-         * pinging is being performed. Runs on the UI thread.
-         */
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setMessage(getString(R.string.async_progress));
-            progressDialog.show();
-        }
-
-        /**
-         * Pings the specified host using a background thread.
-         * The specified parameters are those passed to {@link #execute}
-         * when MainActivity starts this task. In this case it will always
-         * be a single {@code String} representing the URL to be pinged.
-         *
-         * @param hostnames The URL to be pinged
-         * @return A Bundle containing response code
-         * and response message
-         */
-        @Override
-        protected Bundle doInBackground(String... hostnames) {
-            String hostname = hostnames[0];
-            HttpPinger httpPinger = new HttpPinger();
-
-            return httpPinger.getResponse(hostname);
-        }
-
-        /**
-         * Runs on the UI thread after {@link #doInBackground}. The specified
-         * parameter is the value returned by {@link #doInBackground}. [SDK quote]
-         * Starts {@link DisplayResponseActivity}, passing it the {@code Bundle}
-         * containing response code and response message.
-         *
-         * @param response A Bundle containing response code and response message
-         */
-        @Override
-        protected void onPostExecute(Bundle response) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-            Intent displayResponse = new Intent(MainActivity.this, DisplayResponseActivity.class);
-            displayResponse.putExtra("response", response);
-            startActivity(displayResponse);
-        }
-    }
 
     /* ------------- MENU ------------- */
 
@@ -390,12 +199,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *                    (not used in this code)
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 
         if (requestCode == CHANGE_SETTINGS_REQUEST) {
             // "refresh" recycler view fragment after user has changed
             // the view settings & navigates back using phone's back button
             addFragment(new RecyclerFragment());
+
+        } else if (resultCode == RESULT_OK && requestCode == ADD_HOST_REQUEST) {
+            // pass the new host to the pinglist fragment
+            final String hostname = data.getStringExtra(EXTRA_HOSTNAME);
+            ((RecyclerFragment) getSupportFragmentManager()
+                    .findFragmentByTag(RECYCLER_FRAGMENT_TAG)).addNewHost(hostname);
         }
     }
 

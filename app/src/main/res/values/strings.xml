@@ -5,6 +5,7 @@
     <string name="app_name">PingApp</string>
     <string name="offline_toast">you\'re offline</string>
     <string name="doublehost_toast">host is already in the list!</string>
+    <string name="host_added">host has been added</string>
     <string name="textfield_initialhost" translatable="false">www.google.com</string>
 
     <!-- DISPLAY RESPONSE ACTIVITY  -->
@@ -26,7 +27,7 @@
     <string name="menu_pinging_off">Turn Pinging OFF</string>
 
     <!-- VIEWS -->
-    <string name="promptDisplay">Enter hostname or IP address:</string>
+    <string name="promptDisplay">\u0020Enter hostname or IP address:</string>
     <string name="buttonAdd">ADD TO LIST</string>
     <string name="buttonPingNow">PING NOW</string>
     <string name="textfield_hint" translatable="false">www.google.com</string>

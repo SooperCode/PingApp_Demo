@@ -1,6 +1,5 @@
 package com.soopercode.pingapp.listview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,7 +49,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
     private RecyclerAdapter recyclerAdapter;
     private List<PingItem> pingList;
-    private Activity activity;
+    private Context context;
     private boolean nerdViewOn;
     private SwipeRefreshLayout refreshLayout;
 
@@ -73,11 +72,10 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
             "google.dk"
     };
 
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = activity;
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
@@ -87,7 +85,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         // ***** FOR TESTING - FILL UP LIST. ************
         PrintWriter printer = null;
         try {
-            OutputStream out = activity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE);
+            OutputStream out = context.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE);
             printer = new PrintWriter(out);
             for (String host : DUMMY_HOSTS) {
                 printer.println(host);
@@ -106,7 +104,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         setHasOptionsMenu(true);
 
         // check for nerd view
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         nerdViewOn = sharedPrefs.getBoolean("checkbox_nerdview", false);
 
     }
@@ -117,12 +115,12 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         View view = inflater.inflate(R.layout.fragment_recyclerview, container, false);
 
         pingList = new ArrayList<>();
-        recyclerAdapter = new RecyclerAdapter(activity, pingList, nerdViewOn);
+        recyclerAdapter = new RecyclerAdapter(context, pingList, nerdViewOn);
         RecyclerView pingListRecycler = (RecyclerView) view.findViewById(R.id.recyclerview_pinglist);
         pingListRecycler.setHasFixedSize(true);
-        pingListRecycler.setLayoutManager(new LinearLayoutManager(activity));
+        pingListRecycler.setLayoutManager(new LinearLayoutManager(context));
         pingListRecycler.setAdapter(recyclerAdapter);
-        pingListRecycler.addOnItemTouchListener(new RecyclerItemClickListener(activity, pingListRecycler, this));
+        pingListRecycler.addOnItemTouchListener(new RecyclerItemClickListener(context, pingListRecycler, this));
 
         loadList();
 
@@ -146,11 +144,11 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
      */
     public void refreshPingList() {
 
-        if (Utility.gotConnection(activity)) {
+        if (Utility.gotConnection(context)) {
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(pingList.toArray(new PingItem[pingList.size()]));
         } else {
-            Toast.makeText(activity, getString(R.string.offline_toast),
+            Toast.makeText(context, getString(R.string.offline_toast),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -159,7 +157,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
         InputStream in = null;
         try {
-            in = activity.openFileInput(MainActivity.FILENAME);
+            in = context.openFileInput(MainActivity.FILENAME);
             if (in != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 String hostname;
@@ -174,7 +172,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
             //if file was empty or not found, set list status empty:
             if (pingList.isEmpty()) {
                 Log.d(TAG, "loadList(): host list is empty");
-                PrefsManager.setPingListEmpty(activity, true);
+                PrefsManager.setPingListEmpty(context, true);
             }
             if (in != null) {
                 try {
@@ -190,7 +188,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         // if this is the first host in the list, set list status from empty to not-empty:
         if (pingList.isEmpty()) {
             Log.d(TAG, "addHostToList() - host list is empty");
-            PrefsManager.setPingListEmpty(activity, false);
+            PrefsManager.setPingListEmpty(context, false);
         }
         // make new Ping-Item, add to list, save list to file, ping host
         PingItem host = new PingItem(validatedHostname);
@@ -207,7 +205,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
             AsyncListPing asyncPinger = new AsyncListPing(this);
             asyncPinger.execute(item);
         } else {
-            Toast.makeText(activity, getString(R.string.offline_toast),
+            Toast.makeText(context, getString(R.string.offline_toast),
                     Toast.LENGTH_SHORT).show();
         }
         recyclerAdapter.notifyDataSetChanged();
@@ -220,7 +218,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
     private void saveList() {
         OutputStreamWriter out = null;
         try {
-            out = new OutputStreamWriter(activity.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE));
+            out = new OutputStreamWriter(context.openFileOutput(MainActivity.FILENAME, Context.MODE_PRIVATE));
             for (int i = 0; i < pingList.size(); i++) {
                 out.write(pingList.get(i).getHostname() + "\n");
             }
@@ -246,20 +244,20 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         if (!pingList.isEmpty()) {
             pingList.clear();
         }
-        PrefsManager.setPingListEmpty(activity, true);
+        PrefsManager.setPingListEmpty(context, true);
 
         //tell BGPManager to deactivate bg-pinging if it's active.
-        Intent intent = new Intent(activity, BackgroundPingManager.class);
+        Intent intent = new Intent(context, BackgroundPingManager.class);
         intent.putExtra("switchOn", 2); //2 = turn it off
-        activity.sendBroadcast(intent);
+        context.sendBroadcast(intent);
 
         //delete file
-        activity.deleteFile(MainActivity.FILENAME);
+        context.deleteFile(MainActivity.FILENAME);
         recyclerAdapter.notifyDataSetChanged();
     }
 
     private void showClearListDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        AlertDialog dialog = new AlertDialog.Builder(context).create();
         dialog.setMessage("Clear all hosts from the list?");
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
@@ -285,7 +283,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment, menu);
+        inflater.inflate(R.menu.menu_main_fragment, menu);
     }
 
     @Override
@@ -316,7 +314,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
 
     @Override
     public void onCardLongClick(final View view, final int position) {
-        new AlertDialog.Builder(activity)
+        new AlertDialog.Builder(context)
                 .setTitle("Confirm")
                 .setMessage("Delete '" + pingList.get(position).getHostname() + "'?")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -372,28 +370,29 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
     }
 
 
-    /***************** STUFF LEFT OVER FROM PingListManager ************************/
+    /**
+     * Checks if the specified hostname is already contained in our {@code ArrayList}
+     * and calls {@code addHostToList} if it's not.
+     *
+     * @param validatedHostname A valid URL or IP-address
+     */
+    public void addNewHost(final String validatedHostname) {
 
+        String toastMessage = getString(R.string.host_added);
+        boolean notInTheList = true;
 
-//
-//    /**
-//     * Checks if the specified hostname is already contained in our {@code ArrayList}
-//     * and calls {@code addHostToList} if it's not.
-//     *
-//     * @param validatedHostname A valid URL or IP-address
-//     */
-//    public void addNewHost(String validatedHostname){
-//        for(PingItem item : pingList){
-//            if(validatedHostname.equals(item.getHostname())){
-//                Toast.makeText(mainActivity, mainActivity.getString(R.string.doublehost_toast),
-//                        Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//        }
-//        addHostToList(validatedHostname);
-//    }
-//
-//
+        for (PingItem item : pingList) {
+            if (validatedHostname.equals(item.getHostname())) {
+                notInTheList = false;
+                toastMessage = getString(R.string.doublehost_toast);
+                break;
+            }
+        }
+        if (notInTheList) {
+            addHostToList(validatedHostname, true);
+        }
+        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
+    }
 
 
 }

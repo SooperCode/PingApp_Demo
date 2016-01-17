@@ -32,6 +32,16 @@
         </activity>
 
         <activity
+            android:name="com.soopercode.pingapp.AddAndPingActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.soopercode.pingapp.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.soopercode.pingapp.MainActivity"/>
+        </activity>
+
+        <activity
             android:name="com.soopercode.pingapp.SettingsActivity"
             android:label="@string/activity_settings_title"
             android:parentActivityName="com.soopercode.pingapp.MainActivity"
