@@ -72,22 +72,13 @@ public class MainActivity extends AppCompatActivity {
         ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar))
                 .setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
-        // after installation of the app, set example host in the list:
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isFirstRun = sharedPrefs.getBoolean("firstRun", true);
-        if (isFirstRun) {
-            //TODO: .addNewHost("www.google.com");
-            SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putBoolean("firstRun", false).apply();
-        }
-
         // add recycler view fragment
         if (savedInstanceState == null) {
             addFragment(new RecyclerFragment());
         }
     }
 
-    private void addFragment(Fragment fragment) {
+    private void addFragment(final Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container_fragment_recycler, fragment, RECYCLER_FRAGMENT_TAG)
                 .commitAllowingStateLoss();
@@ -127,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
      * @return true to make the menu visible
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -151,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
      * no further processing is necessary
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.menu_settings:

@@ -13,6 +13,10 @@ import android.content.SharedPreferences;
  */
 public class PrefsManager {
 
+    private static final String PREFKEY_PINGING_ACTIVE = "isActive";
+    private static final String PREFKEY_WATCHLIST_PREFS = "watchlistPrefs";
+    private static final String PREFKEY_LIST_EMPTY = "listIsEmpty";
+
     private static SharedPreferences watchlistPrefs;
 
     /**
@@ -20,44 +24,35 @@ public class PrefsManager {
      * to whether or not {@link com.soopercode.pingapp.background.BackgroundPingManager}
      * has scheduled any background pinging tasks.
      *
-     * @param context Current context, neccessary for accessing {@code SharedPreferences}
+     * @param context Current context, necessary for accessing {@code SharedPreferences}
      * @return true if background pinging is set to active
      */
-    public static boolean isBgPingingActive(Context context) {
-        if (watchlistPrefs == null) {
-            watchlistPrefs = context.getSharedPreferences("watchlistPrefs", Context.MODE_PRIVATE);
-        }
-        return watchlistPrefs.getBoolean("isActive", false);
+    public static boolean isBgPingingActive(final Context context) {
+        ensurePrefs(context);
+        return watchlistPrefs.getBoolean(PREFKEY_PINGING_ACTIVE, false);
     }
 
     /**
      * Shows current status of the watchlist which is set based on
      * whether or not the list contains any hosts.
      *
-     * @param context Current context, neccessary for accessing {@code SharedPreferences}
+     * @param context Current context, necessary for accessing {@code SharedPreferences}
      * @return true if the watchlist does not contain any hosts
      */
-    public static boolean isPingListEmpty(Context context) {
-        if (watchlistPrefs == null) {
-            watchlistPrefs = context.getSharedPreferences("watchlistPrefs", Context.MODE_PRIVATE);
-        }
-        return watchlistPrefs.getBoolean("listIsEmpty", false);
+    public static boolean isPingListEmpty(final Context context) {
+        ensurePrefs(context);
+        return watchlistPrefs.getBoolean(PREFKEY_LIST_EMPTY, false);
     }
 
     /**
      * Sets background pinging status to active/not active.
      * Called whenever background pinging is switched on or off.
      *
-     * @param context  Current context, neccessary for accessing {@code SharedPreferences}
+     * @param context  Current context, necessary for accessing {@code SharedPreferences}
      * @param isActive The new status of background pinging: active or not
      */
-    public static void setBgPingingActive(Context context, boolean isActive) {
-        if (watchlistPrefs == null) {
-            watchlistPrefs = context.getSharedPreferences("watchlistPrefs", Context.MODE_PRIVATE);
-        }
-        SharedPreferences.Editor editor = watchlistPrefs.edit();
-        editor.putBoolean("isActive", isActive);
-        editor.apply();
+    public static void setBgPingingActive(final Context context, final boolean isActive) {
+        setPreference(context, PREFKEY_PINGING_ACTIVE, isActive);
     }
 
     /**
@@ -68,14 +63,21 @@ public class PrefsManager {
      * @param context Current context, neccessary for accessing {@code SharedPreferences}
      * @param isEmpty The new status of the watchlist: empty or not
      */
-    public static void setPingListEmpty(Context context, boolean isEmpty) {
-        if (watchlistPrefs == null) {
-            watchlistPrefs = context.getSharedPreferences("watchlistPrefs", Context.MODE_PRIVATE);
-        }
-        SharedPreferences.Editor editor = watchlistPrefs.edit();
-        editor.putBoolean("listIsEmpty", isEmpty);
-        editor.apply();
+    public static void setPingListEmpty(final Context context, final boolean isEmpty) {
+        setPreference(context, PREFKEY_LIST_EMPTY, isEmpty);
     }
 
+    private static void ensurePrefs(final Context context) {
+        if (watchlistPrefs == null) {
+            watchlistPrefs = context.getSharedPreferences(PREFKEY_WATCHLIST_PREFS, Context.MODE_PRIVATE);
+        }
+    }
+
+    private static void setPreference(final Context context, final String prefKey, final boolean prefState) {
+        ensurePrefs(context);
+        final SharedPreferences.Editor editor = watchlistPrefs.edit();
+        editor.putBoolean(prefKey, prefState);
+        editor.apply();
+    }
 
 }

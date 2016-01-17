@@ -7,7 +7,6 @@
     <color name="primary_light">#C5CAE9</color> <!-- 100 tint -->
     <color name="indigo_800">#283593</color>
     <color name="indigo_900">#1A237E</color>
-    <!--<color name="accent">#7C4DFF</color>-->
     <color name="accent">#725bf9</color>
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>

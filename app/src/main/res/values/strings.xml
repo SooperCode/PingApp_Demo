@@ -13,6 +13,8 @@
     <string name="display_title">Server Response:</string>
     <string name="display_code" translatable="false">Status Code 200:</string>
     <string name="display_default">\"Woohoo, we\'re in business!!\"</string>
+    <string name="display_code_text">Status Code %03d</string>
+    <string name="display_msg_text">(%s)</string>
 
     <!-- NOTIFICATION TEXT -->
     <string name="notif_ticker">\u0020is available</string>

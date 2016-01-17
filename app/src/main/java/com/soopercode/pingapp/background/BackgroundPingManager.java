@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.soopercode.pingapp.PrefsManager;
@@ -57,7 +56,7 @@ public class BackgroundPingManager extends BroadcastReceiver {
      * @param intent  The Intent being received
      */
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         this.context = context;
 
         // get ping interval:
@@ -78,7 +77,7 @@ public class BackgroundPingManager extends BroadcastReceiver {
             case MESSAGE_DEACTIVATE: //turn off bg pinging
                 deactivateBackgroundPinging();
                 break;
-            //else the interval has changed OR we must have been revived after reboot:
+            // else the interval has changed OR we must have been revived after reboot:
             default:
                 //check if bg-pinging is supposed to be active:
                 if (PrefsManager.isBgPingingActive(context)) {
@@ -106,7 +105,7 @@ public class BackgroundPingManager extends BroadcastReceiver {
      * Deactivates background pinging by canceling the scheduled alarms.
      */
     private void deactivateBackgroundPinging() {
-        //reuse objects if possible
+        // re-use objects if possible
         if (alarmManager != null && pendingIntent != null && backgroundPinging != null) {
             alarmManager.cancel(pendingIntent);
         } else {

@@ -21,12 +21,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private static final String TAG = RecyclerAdapter.class.getSimpleName();
 
-    private List<PingItem> pingItems;
-    private boolean nerdViewOn;
-    private Context context;
-    RecyclerView recyclerView;
+    private final List<PingItem> pingItems;
+    private final boolean nerdViewOn;
+    private final Context context;
 
-    public RecyclerAdapter(Context context, List<PingItem> pingItems, boolean nerdViewOn) {
+    public RecyclerAdapter(final Context context, final List<PingItem> pingItems, final boolean nerdViewOn) {
         this.context = context;
         this.pingItems = pingItems;
         this.nerdViewOn = nerdViewOn;
@@ -34,28 +33,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     /* Create new views - invoked by recycler view's layout manager */
     @Override
-    public RecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(
+        final View view = LayoutInflater.from(parent.getContext()).inflate(
                 nerdViewOn ? R.layout.cardview_nerd_layout : R.layout.cardview_layout,
                 parent, false);
         //    view.setOnClickListener(new OnCardClickListener(this));
-
-        recyclerView = (RecyclerView) parent;
 
         return new RecyclerHolder(view);
     }
 
     /* Replace the contents of a view (invoked by the layout manager) */
     @Override
-    public void onBindViewHolder(RecyclerHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerHolder holder, final int position) {
 
         // if last item is visible, create "padding" on the bottom
         // to enable scrolling the last item above the floating action button
         holder.invisibleView.setVisibility(position == pingItems.size() - 1 ?
                 View.INVISIBLE : View.GONE);
 
-        PingItem pingItem = pingItems.get(position);
+        final PingItem pingItem = pingItems.get(position);
         if (!nerdViewOn) {
             holder.host.setText(pingItem.getHostname());
             if (pingItem.isAvailable()) {
@@ -83,7 +80,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return pingItems.size();
     }
 
-    private int getResponseColor(int responseCode) {
+    private int getResponseColor(final int responseCode) {
         // choose Color according to status code category:
         if (100 <= responseCode && responseCode <= 199) {
             return Color.GRAY;
@@ -103,19 +100,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public static class RecyclerHolder extends RecyclerView.ViewHolder {
 
         // normal view
-        TextView host;
-        ImageView status;
+        final TextView host;
+        final ImageView status;
 
         // nerd view
-        TextView hostNerd;
-        TextView hostIp;
-        TextView responseCode;
-        TextView responseText;
+        final TextView hostNerd;
+        final TextView hostIp;
+        final TextView responseCode;
+        final TextView responseText;
 
         // invisible view - simulates bottom margin in last item
-        View invisibleView;
+        final View invisibleView;
 
-        public RecyclerHolder(View itemView) {
+        public RecyclerHolder(final View itemView) {
             super(itemView);
 
             host = (TextView) itemView.findViewById(R.id.listview_host);

@@ -1,17 +1,14 @@
 package com.soopercode.pingapp;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,9 +53,20 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
     protected void onStart() {
         super.onStart();
         if (dummyCounter != 0) {
-            prompt.setTextAppearance(this, R.style.defaultStyle);
+            setPromptTextAppearance(R.style.defaultStyle);
             prompt.setText(R.string.promptDisplay);
             dummyCounter = 0;
+        }
+    }
+
+    /*
+        Because the method is deprecated in API 23+
+     */
+    private void setPromptTextAppearance(final int style){
+        if (Build.VERSION.SDK_INT < 23) {
+            prompt.setTextAppearance(this, style);
+        } else {
+            prompt.setTextAppearance(style);
         }
     }
 
@@ -69,13 +77,13 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
      * @param hostname The text entered by the user
      * @return true if a valid URL has been obtained
      */
-    private boolean validateHostname(String hostname) {
+    private boolean validateHostname(final String hostname) {
         try {
             validatedHost = Utility.validateHostname(hostname);
             usersHost.setText(validatedHost);
             //check the dummy-state:
             if (dummyCounter != 0) {
-                prompt.setTextAppearance(this, R.style.defaultStyle);
+                setPromptTextAppearance(R.style.defaultStyle);
                 prompt.setText(R.string.promptDisplay);
                 dummyCounter = 0;
             }
@@ -103,7 +111,7 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
                     prompt.setText(getString(R.string.promptDisplay));
                     dummyCounter = 0;
             }
-            prompt.setTextAppearance(this, R.style.negativeStyle);
+            setPromptTextAppearance(R.style.negativeStyle);
             usersHost.requestFocus();
             Log.e(TAG, sue.toString(), sue);
             return false;
@@ -143,7 +151,7 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
          * and response message
          */
         @Override
-        protected Bundle doInBackground(String... hostnames) {
+        protected Bundle doInBackground(final String... hostnames) {
             return new HttpPinger().getResponse(hostnames[0]);
         }
 
@@ -156,7 +164,7 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
          * @param response A Bundle containing response code and response message
          */
         @Override
-        protected void onPostExecute(Bundle response) {
+        protected void onPostExecute(final Bundle response) {
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
@@ -173,16 +181,14 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
                 usersHost.setText("");
                 if (dummyCounter == 0) {
                     prompt.setText(R.string.promptDisplay);
-                    prompt.setTextAppearance(this, R.style.defaultStyle);
+                    setPromptTextAppearance(R.style.defaultStyle);
                 }
                 break;
 
             case R.id.buttonPingNow:
                 if (validateHostname(usersHost.getText().toString())) {
                     // if we have a valid hostname: ping it
-                    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-                    if (netInfo != null && netInfo.isConnected()) {
+                    if (Utility.isConnected(this)) {
                         new QuickPing().execute(validatedHost);
                     } else {
                         Toast.makeText(this, getString(R.string.offline_toast), Toast.LENGTH_SHORT).show();
@@ -199,15 +205,10 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
                     intent.putExtra(MainActivity.EXTRA_HOSTNAME, validatedHost);
                     setResult(RESULT_OK, intent);
                     finish();
-
-                    //hide the keyboard:
-//                    final InputMethodManager inputMan = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//                    inputMan.hideSoftInputFromWindow(usersHost.getWindowToken(), 0);
                 } else {
                     Log.d(TAG, "validation returned false");
                 }
                 break;
-
         }
     }
 }

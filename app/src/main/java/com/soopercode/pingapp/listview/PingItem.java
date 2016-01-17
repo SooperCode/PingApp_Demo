@@ -7,12 +7,12 @@ package com.soopercode.pingapp.listview;
  */
 public class PingItem {
 
-    private String hostname = "";
-    private int responseCode = 0;
+    private final String hostname;
+    private int responseCode;
     private boolean isAvailable;
     private String ip = "";
 
-    public PingItem(String hostname) {
+    public PingItem(final String hostname) {
         this.hostname = hostname;
     }
 
@@ -24,7 +24,7 @@ public class PingItem {
         return responseCode;
     }
 
-    public void setResponseCode(int responseCode) {
+    public void setResponseCode(final int responseCode) {
         this.responseCode = responseCode;
     }
 
@@ -32,7 +32,7 @@ public class PingItem {
         return isAvailable;
     }
 
-    public void setAvailable(boolean isAvailable) {
+    public void setAvailable(final boolean isAvailable) {
         this.isAvailable = isAvailable;
     }
 
@@ -40,7 +40,7 @@ public class PingItem {
         return ip;
     }
 
-    public void setIp(String ip) {
+    public void setIp(final String ip) {
         this.ip = ip;
     }
 

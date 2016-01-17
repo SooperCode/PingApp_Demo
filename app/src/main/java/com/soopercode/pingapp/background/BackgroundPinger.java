@@ -7,8 +7,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 import com.soopercode.pingapp.MainActivity;
 import com.soopercode.pingapp.R;
 import com.soopercode.pingapp.utils.SocketPinger;
+import com.soopercode.pingapp.utils.Utility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class BackgroundPinger extends Service {
      * informs the system about details of this service's start/stop behavior
      */
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
         //create Handlers:
         notificationHandler = new NotificationHandler(this);
         doneHandler = new DoneHandler(this);
@@ -67,7 +66,7 @@ public class BackgroundPinger extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private Runnable runner = new Runnable() {
+    private final Runnable runner = new Runnable() {
         @Override
         public void run() {
             ping(MainActivity.FILENAME);
@@ -83,11 +82,9 @@ public class BackgroundPinger extends Service {
      *
      * @param filename The name of the local file that contains the list of hostnames
      */
-    private void ping(String filename) {
-        //check if phone is online:
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
+    private void ping(final String filename) {
+
+        if (Utility.isConnected(this)) {
             InputStream in = null;
             try {
                 in = openFileInput(filename);
@@ -124,7 +121,7 @@ public class BackgroundPinger extends Service {
      * not implemented
      */
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(final Intent intent) {
         return null;
     }
 
@@ -138,8 +135,8 @@ public class BackgroundPinger extends Service {
      */
     private static class NotificationHandler extends Handler {
 
-        private static Map<String, Integer> hostsNotified = new HashMap<>();
-        private Context context;
+        private static final Map<String, Integer> HOSTS_NOTIFIED = new HashMap<>();
+        private final Context context;
 
         /**
          * Constructs a new NotificationHandler with a reference to
@@ -147,7 +144,7 @@ public class BackgroundPinger extends Service {
          *
          * @param outer A reference to the current BackgroundPinger object
          */
-        public NotificationHandler(BackgroundPinger outer) {
+        public NotificationHandler(final BackgroundPinger outer) {
             context = outer.getApplicationContext();
         }
 
@@ -158,13 +155,13 @@ public class BackgroundPinger extends Service {
          * @param msg A {@link android.os.Message} object
          */
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             if (msg != null) {
-                String hostname = msg.getData().getString("hostname");
+                final String hostname = msg.getData().getString("hostname");
                 showNotification(hostname);
 
                 // FOR TESTING: if Toast-switch is activated, show Toast.
-                SharedPreferences sharedPrefs
+                final SharedPreferences sharedPrefs
                         = PreferenceManager.getDefaultSharedPreferences(context);
                 if (sharedPrefs.getBoolean("toast_switch", false)) {
                     Toast.makeText(context, hostname, Toast.LENGTH_SHORT).show();
@@ -178,17 +175,17 @@ public class BackgroundPinger extends Service {
          *
          * @param host The host URL that has responded to the ping request.
          */
-        private void showNotification(String host) {
+        private void showNotification(final String host) {
             //check if host is already in the list:
-            int notificationID = 0;
-            if (hostsNotified.containsKey(host)) {
-                notificationID = hostsNotified.get(host);
+            final int notificationID;
+            if (HOSTS_NOTIFIED.containsKey(host)) {
+                notificationID = HOSTS_NOTIFIED.get(host);
             } else {
-                notificationID = hostsNotified.size() + 1;
-                hostsNotified.put(host, notificationID);
+                notificationID = HOSTS_NOTIFIED.size() + 1;
+                HOSTS_NOTIFIED.put(host, notificationID);
             }
             // build the notification
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+            final NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
             notification.setAutoCancel(true); //dismiss when user has opened it.
             notification.setSmallIcon(R.mipmap.ic_launcher);
             notification.setTicker(host + context.getString(R.string.notif_ticker));
@@ -197,17 +194,17 @@ public class BackgroundPinger extends Service {
             notification.setContentText("Host " + host + context.getString(R.string.notif_contentText));
 
             //check if sound on or muted (default: sound/vibrate)
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean soundOn = sharedPrefs.getBoolean("notification_sound", true);
+            final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+            final boolean soundOn = sharedPrefs.getBoolean("notification_sound", true);
             if (soundOn) {
                 notification.setDefaults(Notification.DEFAULT_ALL);
             }
 
-            Intent intent = new Intent(context, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            final Intent intent = new Intent(context, MainActivity.class);
+            final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             notification.setContentIntent(pendingIntent);
 
-            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             nm.notify(notificationID, notification.build());
 
         }
@@ -219,7 +216,7 @@ public class BackgroundPinger extends Service {
      */
     private static class DoneHandler extends Handler {
 
-        private BackgroundPinger outer; //reference to outer class
+        private final BackgroundPinger outer; //reference to outer class
 
         /**
          * Constructs a new DoneHandler with a reference
@@ -227,7 +224,7 @@ public class BackgroundPinger extends Service {
          *
          * @param outer A reference to the current BackgroundPinger object
          */
-        public DoneHandler(BackgroundPinger outer) {
+        public DoneHandler(final BackgroundPinger outer) {
             this.outer = outer;
         }
 
@@ -238,7 +235,7 @@ public class BackgroundPinger extends Service {
          * @param msg A {@link android.os.Message} object
          */
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             outer.stopSelf();
         }
     }

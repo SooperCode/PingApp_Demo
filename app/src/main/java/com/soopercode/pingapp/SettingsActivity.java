@@ -1,6 +1,5 @@
 package com.soopercode.pingapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +43,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         private Context context;
 
+        @Override
+        public void onAttach(final Context context) {
+            super.onAttach(context);
+            this.context = context;
+        }
+
         /**
          * Initializes this {@code Fragment}, adding the {@code Preference} widgets.
          *
@@ -53,10 +58,9 @@ public class SettingsActivity extends AppCompatActivity {
          *                           Otherwise it is null. [SDK quote]
          */
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
-            context = getActivity().getBaseContext();
         }
 
         /**
@@ -67,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onResume() {
             super.onResume();
-            SwitchPreference switchPref = (SwitchPreference) findPreference("switch_watchlist");
+            final SwitchPreference switchPref = (SwitchPreference) findPreference("switch_watchlist");
 
             //if ping list is empty -> disable bg-ping-switch
             if (PrefsManager.isPingListEmpty(context)) {
@@ -92,11 +96,10 @@ public class SettingsActivity extends AppCompatActivity {
          * @return true to update the state of the Preference with the new value
          */
         @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
+        public boolean onPreferenceChange(final Preference preference, final Object newValue) {
             Log.d(TAG, "onPreferenceChange()");
             // prepare message for BGPManager
-            final Activity currentActivity = getActivity();
-            final Intent intent = new Intent(currentActivity.getBaseContext(), BackgroundPingManager.class);
+            final Intent intent = new Intent(context, BackgroundPingManager.class);
             int msg = BackgroundPingManager.MESSAGE_EMPTY;
 
             // check which preference has changed:
@@ -107,15 +110,15 @@ public class SettingsActivity extends AppCompatActivity {
 
             } else if (preference instanceof ListPreference) {
                 // if ping interval has changed, update summary
-                ListPreference pref = (ListPreference) preference;
-                int index = pref.findIndexOfValue(newValue.toString());
+                final ListPreference pref = (ListPreference) preference;
+                final int index = pref.findIndexOfValue(newValue.toString());
                 pref.setSummary(String.format(
                         getString(R.string.pref_interval_summary),
                         pref.getEntries()[index].toString()));
             }
             // notify BGPManager
             intent.putExtra(BackgroundPingManager.EXTRA_PING_SWITCH, msg);
-            currentActivity.sendBroadcast(intent);
+            context.sendBroadcast(intent);
             return true;
         }
     }

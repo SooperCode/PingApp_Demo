@@ -26,18 +26,18 @@ public class DisplayResponseActivity extends Activity {
      *                           Otherwise it is null. [SDK quote]
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
         //unpack response bundle:
-        Bundle response = getIntent().getBundleExtra("response");
-        int responseCode = response.getInt("responseCode");
-        String responseMsg = response.getString("responseMsg");
+        final Bundle response = getIntent().getBundleExtra("response");
+        final int responseCode = response.getInt("responseCode");
+        final String responseMsg = response.getString("responseMsg");
 
-        TextView code = (TextView) findViewById(R.id.display_code);
-        TextView text = (TextView) findViewById(R.id.display_text);
-        TextView msg = (TextView) findViewById(R.id.display_msg);
+        final TextView code = (TextView) findViewById(R.id.display_code);
+        final TextView text = (TextView) findViewById(R.id.display_text);
+        final TextView msg = (TextView) findViewById(R.id.display_msg);
 
         // set appearance according to status code
         if (200 <= responseCode && responseCode <= 399) {
@@ -50,8 +50,8 @@ public class DisplayResponseActivity extends Activity {
             code.setTextColor(Color.RED);
             msg.setTextColor(Color.RED);
         }
-        code.setText("Status Code " + String.format("%03d", responseCode));
-        msg.setText("(" + responseMsg + ")");
+        code.setText(getString(R.string.display_code_text, responseCode));
+        msg.setText(getString(R.string.display_msg_text, responseMsg));
         text.setText(ResponseCodeEvaluator.generateResponse(this, responseCode));
     }
 }
