@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.soopercode.pingapp.background.BackgroundPingManager;
 import com.soopercode.pingapp.listview.RecyclerFragment;
@@ -153,11 +154,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_pinging_on:
                 Log.d(TAG, "menu: turn pinging on clicked");
                 sendMessageToBackgroundPingManager(BackgroundPingManager.MESSAGE_ACTIVATE);
+                Toast.makeText(this, getString(R.string.pinging_activated), Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.menu_pinging_off:
                 Log.d(TAG, "menu: turn pinging off clicked");
                 sendMessageToBackgroundPingManager(BackgroundPingManager.MESSAGE_DEACTIVATE);
+                Toast.makeText(this, getString(R.string.pinging_deactivated), Toast.LENGTH_SHORT).show();
                 return true;
 
             default:

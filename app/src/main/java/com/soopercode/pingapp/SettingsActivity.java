@@ -10,6 +10,7 @@ import android.preference.SwitchPreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.soopercode.pingapp.background.BackgroundPingManager;
 
@@ -43,12 +44,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         private Context context;
 
-        @Override
-        public void onAttach(final Context context) {
-            super.onAttach(context);
-            this.context = context;
-        }
-
         /**
          * Initializes this {@code Fragment}, adding the {@code Preference} widgets.
          *
@@ -60,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            context = getActivity();
             addPreferencesFromResource(R.xml.preferences);
         }
 
@@ -105,8 +101,15 @@ public class SettingsActivity extends AppCompatActivity {
             // check which preference has changed:
             if (preference instanceof SwitchPreference) {
                 // if it was watchlist switch, send BGPManager message about it
-                msg = ((Boolean) newValue) ?
-                        BackgroundPingManager.MESSAGE_ACTIVATE : BackgroundPingManager.MESSAGE_DEACTIVATE;
+                final String toastText;
+                if((Boolean)newValue){
+                    msg = BackgroundPingManager.MESSAGE_ACTIVATE;
+                    toastText = getString(R.string.pinging_activated);
+                } else {
+                    msg = BackgroundPingManager.MESSAGE_DEACTIVATE;
+                    toastText = getString(R.string.pinging_deactivated);
+                }
+                Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
 
             } else if (preference instanceof ListPreference) {
                 // if ping interval has changed, update summary

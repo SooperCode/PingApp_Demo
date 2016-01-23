@@ -7,6 +7,8 @@
     <string name="doublehost_toast">host is already in the list!</string>
     <string name="host_added">host has been added</string>
     <string name="textfield_initialhost" translatable="false">www.google.com</string>
+    <string name="pinging_activated">background pinging is active now</string>
+    <string name="pinging_deactivated">background pinging is being stopped...</string>
 
     <!-- DISPLAY RESPONSE ACTIVITY  -->
     <string name="async_progress">ping in progress...</string>
