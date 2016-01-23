@@ -3,11 +3,14 @@
 
     <!-- material palette - indigo -->
     <color name="primary">#3F51B5</color>   <!-- 500 tint -->
+    <color name="primary_30alpha">#4D3F51B5</color>
     <color name="primary_dark">#303F9F</color> <!-- 700 tint -->
     <color name="primary_light">#C5CAE9</color> <!-- 100 tint -->
+    <color name="primary_light_30alpha">#4DC5CAE9</color>
     <color name="indigo_800">#283593</color>
     <color name="indigo_900">#1A237E</color>
     <color name="accent">#725bf9</color>
+    <color name="accent_30alpha">#4D725bf9</color> <!-- 30% alpha -->
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>

@@ -91,27 +91,27 @@ public class AddAndPingActivity extends AppCompatActivity implements View.OnClic
         } catch (StupidUserException sue) {
             switch (dummyCounter) {
                 case 0:
-                    prompt.setText("Oops! Try again...");
+                    prompt.setText(" Oops! Try again...");
+                    setPromptTextAppearance(R.style.negativeStyle);
                     dummyCounter++;
                     break;
                 case 1:
-                    prompt.setText("Come on, it can't be that hard!");
+                    prompt.setText(" Come on, it can't be that hard!");
                     dummyCounter++;
                     break;
                 case 2:
-                    prompt.setText("uhm... you sure you wanna do this??");
+                    prompt.setText(" uhm... sure you wanna do this??");
                     dummyCounter++;
                     break;
                 case 3:
-                    prompt.setText("Urrgh, I give up!");
-                    //dummyCounter = 0; break;
+                    prompt.setText(" Urrgh, I give up!");
                     dummyCounter++;
                     break;
                 default:
                     prompt.setText(getString(R.string.promptDisplay));
+                    setPromptTextAppearance(R.style.defaultStyle);
                     dummyCounter = 0;
             }
-            setPromptTextAppearance(R.style.negativeStyle);
             usersHost.requestFocus();
             Log.e(TAG, sue.toString(), sue);
             return false;
