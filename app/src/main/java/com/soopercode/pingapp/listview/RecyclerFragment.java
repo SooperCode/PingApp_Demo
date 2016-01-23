@@ -136,7 +136,7 @@ public class RecyclerFragment extends Fragment implements OnAsyncCompleted,
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //TODO: eventually build in iOS-overscroll effect!
+                //TODO 2.1: eventually build in iOS-overscroll effect!
                 refreshPingList();
             }
         });
